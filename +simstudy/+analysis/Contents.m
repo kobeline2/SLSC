@@ -2,7 +2,7 @@
 % 可視化・統計サマリー関数をまとめたパッケージ
 %
 % 関数一覧
-%   plotSLSC95           - N ごとの SLSC 95 % 分位を描画
+%   plotMetricViolin     - Violin-plot of <metric> vs N for a given (gen,fit) pair.
 %   plotSLSCpassRateVar  - 可変しきい値で P(SLSC < τ) ヒートマップ
 %
 % 使い方例

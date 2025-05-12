@@ -25,24 +25,35 @@ end
 % ---------- first pass: discover metric field names -------------------
 tmp     = load(fullfile(files(1).folder, files(1).name), 'metrics');
 metricNames = fieldnames(tmp.metrics);
-
-% ---------- preallocate struct-of-arrays ------------------------------
+% ---------- preallocate struct-of-arrathetaArray(R,1) = struct();
 allMetrics = struct();
+% ----- 1 回だけ読み込んでテンプレートを作る ----------
+tmp1 = load(fullfile(files(1).folder, files(1).name), 'fitRes');
+tmpl = tmp1.fitRes.theta;          % フィールドがそろった構造体
+thetaArray = repmat(tmpl, R, 1);   % フィールド付きで確保済み
 for k = 1:numel(metricNames)
     key = metricNames{k};
     allMetrics.(key) = zeros(R,1);
 end
 
-% ---------- loop through files ----------------------------------------
 for i = 1:R
-    S = load(fullfile(files(i).folder, files(i).name), 'metrics');
-    for k = 1:numel(metricNames)
-        key = metricNames{k};
+    S = load(fullfile(files(i).folder, files(i).name), ...
+             'metrics', 'fitRes');
+
+    % ---- metrics をベクトル化 --------------------------
+    fn = fieldnames(S.metrics);
+    for k = 1:numel(fn)
+        key = fn{k};
+        if ~isfield(allMetrics,key)
+            allMetrics.(key) = zeros(R,1);
+        end
         allMetrics.(key)(i) = S.metrics.(key);
     end
+
+    % ---- thetaArray を追加 -----------------------------
+    thetaArray(i,1) = S.fitRes.theta;  
 end
 
-% ---------- save (-v7.3 for >2GB safety) ------------------------------
-save(outFile, 'allMetrics', '-v7.3');
+save(outFile, 'allMetrics', 'thetaArray', '-v7.3');  
 fprintf("Aggregated %d files → %s\n", R, outFile);
 end

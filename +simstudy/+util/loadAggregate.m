@@ -7,7 +7,7 @@ function out = loadAggregate(root, query, varName)
 %   root     : ルートフォルダ（例 "results"）
 %   query    : (1) タグ名をそのまま指定   "N50_gumbel2gev"
 %              (2) タグ名にマッチする正規表現  "^N\d+_gumbel2.*$"
-%   varName  : aggregate.mat に保存されている変数名
+%   varName  : aggregate.mat に保存されている変数名("allMetrics", "thetaArray")
 %              （既定 = "allMetrics"）
 %
 %   戻り値 out は struct 配列

@@ -3,6 +3,7 @@ cfg.seed        = 42;           % 乱数シード
 cfg.rep         = 100;          % R
 cfg.sampleSize  = 30;           % N
 cfg.genDist     = 'normal';     % 真の分布 (後で上書き)
+cfg.rawDirRoot  = "results";
 cfg.trueParams = struct( ...                                                    % true parameter(kyoto rainfall)
     'normal',       struct('mu',0,'sigma',1), ...                               % [mu, sigma+]
     'lgamma',       struct('a',26.7121,'b',2.4696,'c',50.1637), ...             % [a:scale, b:shape, c:position]
