@@ -28,7 +28,8 @@ for N   = cfg.Nlist
                 metrics.(mField) = simstudy.metrics.score(mName, obs, fitRes);
             end
             % --- save ---------------------------------------------------
-            simstudy.util.parsave(fullfile(rawDir,sprintf('rep%04d.mat',r)), metrics,fitRes); 
+            simstudy.util.parsave(fullfile(rawDir,sprintf('rep%04d.mat',r)), ...
+                                  metrics,fitRes, obs); 
         end
         % --- aggregate --------------------------------------------------
         simstudy.util.postCollect(rawDir,fullfile(cfg.rawDirRoot,tag,"aggregate.mat"));

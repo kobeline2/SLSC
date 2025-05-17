@@ -5,7 +5,7 @@ cfg = simstudy.config.base();   % デフォルト: 1×1×1 グリッド
 cfg.genList = ["gumbel"];
 cfg.fitList = ["gumbel"];
 cfg.Nlist   = [100];
-cfg.rep     = 10000;
+cfg.rep     = 100;
 experiments.runBatch(cfg);
 
 %% grid run
