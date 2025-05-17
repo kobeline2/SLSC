@@ -34,27 +34,32 @@ case "gev"               % Generalized Extreme Value(k,sigma,mu)
     theta = struct('k',thetaHat(1),'sigma',thetaHat(2),'mu',thetaHat(3));
     ll    = sum(log(gevpdf(obs,thetaHat(1),thetaHat(2),thetaHat(3))));
     fitRes = packResult(model,theta,ll,1,struct("Method","gevfit"));
-
+case "exponential"
+    theta = mle_shiftexp(obs);
+    ll = -length(obs)*log(theta.mu) - sum((obs - theta.c)./theta.mu);
+    fitRes = packResult(model,theta,ll,1,struct("Method","mle_shiftexp"));
 %----------------------------------------------------------------------
 % Fallback: fminunc + loglike dispatcher
 %----------------------------------------------------------------------
-    case "lgamma" % special treatment to satisfy theta.c < min(obs)
+case "lgamma" % special treatment to satisfy theta.c < min(obs)
     fitRes = MLE_lgamma(obs, theta0);
 otherwise
-    [theta0, pack, unpack] = preprocessInit(model, theta0);
-
-    nll = @(p) -simstudy.distributions.loglike(model, obs, unpack(p));
-
-    opts = optimoptions('fminunc', ...
-            'Display','off', ...
-            'Algorithm','quasi-newton', ...
-            'MaxIterations',1e4);
-    safeNLL = @(p) localSafeNLL(nll, p);
-    [pHat,fval,exitflag,out] = fminunc(safeNLL, theta0, opts);
-
-    theta = unpack(pHat);
+    %―― ① pack / unpack と p0 を取得 ―――――――――――――――――――
+    [pack, unpack, p0] = simstudy.util.makeTransform(model, theta0);
+    
+    %―― ② 目的関数 (内部空間) ―――――――――――――――――――――――――――
+    nll   = @(p) -simstudy.distributions.loglike(model, obs, unpack(p));
+    safeN = @(p) localSafeNLL(nll, p);
+    
+    %―― ③ 最適化 ――――――――――――――――――――――――――――――――――
+    opts  = optimoptions('fminunc', ...
+              'Display','off','Algorithm','quasi-newton','MaxIterations',1e4);
+    [pHat,fval,exitflag,out] = fminunc(safeN, p0, opts);
+    
+    %―― ④ 逆変換して保存 ―――――――――――――――――――――――――――――
+    theta = unpack(pHat);          % ⇐ ここで a,b>0 保証
     ll    = -fval;
-    fitRes = packResult(model,theta,ll,exitflag,out);
+    fitRes = packResult(model, theta, ll, exitflag, out);
 end
 end
 % ---
@@ -75,25 +80,12 @@ fitRes.exitflag = flag;
 fitRes.output   = out;
 end
 %======================================================================
-function [p0, pack, unpack] = preprocessInit(model, init)
-switch model
-    case "sqrtet"
-        if isstruct(init), p0 = [init.a, init.b]; else, p0 = init(:).'; end
-        pack   = @(th) [th.a, th.b];
-        unpack = @(p) struct('a',p(1),'b',p(2));
-    case "lnormal"
-        if isstruct(init), p0 = [init.c, init.mu, init.sigma]; else, p0 = init(:).'; end
-        pack   = @(th) [th.c, th.mu, th.sigma];
-        unpack = @(p) struct('c',p(1),'mu',p(2),'sigma',p(3));
-    case "exponential"
-        if isstruct(init), p0 = [init.c, init.mu]; else, p0 = init(:).'; end
-        pack   = @(th) [th.c, th.mu];
-        unpack = @(p) struct('c',p(1),'mu',p(2));
-    otherwise
-        error("simstudy:MLE","No init parser for model %s",model);
+function theta = mle_shiftexp(x)
+cHat   = min(x);
+muHat  = mean(x) - cHat;
+theta  = struct('c', cHat, 'mu', muHat);
 end
-end
-%======================================================================
+
 function fitRes = MLE_lgamma(obs, initStruct)
 % initStruct : struct('a',a0,'b',b0,'c',c0)
 
@@ -111,7 +103,7 @@ nll = @(p) -simstudy.distributions.loglike("lgamma", ...
 
 % ---- optimizer options ---------------------------------------------
 opts = optimoptions('fmincon',...
-        'Display','iter',...
+        'Display','off',...
         'Algorithm','interior-point');
 
 % ---- run optimization ----------------------------------------------

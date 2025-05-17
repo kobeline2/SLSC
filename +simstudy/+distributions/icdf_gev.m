@@ -27,15 +27,18 @@ k     = theta.k;
 sigma = theta.sigma;
 mu    = theta.mu;
 
+
+
 % basic validation
 if sigma <= 0
     error("icdf_gev:InvalidScale","sigma must be positive.");
 end
+x = gevinv(u, k, sigma, mu);
 
-% main formula
-if abs(k) > 1e-12           % regular case (k ≠ 0)
-    x = mu + sigma .* ( (-log(u)).^(-k) - 1 ) ./ k;
-else                         % k → 0 ⇒ Gumbel
-    x = mu - sigma .* log(-log(u));
-end
+% % main formula if you cannot use gevinv.
+% if abs(k) > 1e-12           % regular case (k ≠ 0)
+%     x = mu + sigma .* ( (-log(u)).^(-k) - 1 ) ./ k;
+% else                         % k → 0 ⇒ Gumbel
+%     x = mu - sigma .* log(-log(u));
+% end
 end

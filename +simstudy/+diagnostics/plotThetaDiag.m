@@ -52,7 +52,7 @@ for r = 1:k
             xlabel('Normal Q'); ylabel(fn{c});
             title('');
         else               % scatter
-            scatter(M(:,c), M(:,r), 6, 'filled', 'MarkerFaceAlpha',0.4);
+            scatter(M(:,c), M(:,r), 6, 'filled', 'MarkerFaceAlpha',0.1);
             xlabel(fn{c}); ylabel(fn{r});
         end
     end

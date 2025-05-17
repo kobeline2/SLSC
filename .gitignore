@@ -1,8 +1,11 @@
 # specific for this project
 res.mat
 results/
+archive/
+res.m
 old/
 data/
+report/
 temp.m
 
 # Windows default autosave extension

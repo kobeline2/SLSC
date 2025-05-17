@@ -1,5 +1,5 @@
 function makeAllSwarm(src, metric, Nlist, outDir, opts)
-%MAKEALLVIOLIN  Make swarmchart for *all* gen→fit pairs and save as PNG.
+%MAKEALLSWARM  Make swarmchart for *all* gen→fit pairs and save as PNG.
 %
 %   simstudy.analysis.makeAllSwarm(src, metric, Nlist, outDir)
 %   simstudy.analysis.makeAllSwarm(src, metric, Nlist, outDir, opts)

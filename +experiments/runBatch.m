@@ -12,7 +12,6 @@ for N   = cfg.Nlist
         if isfolder(rawDir), rmdir(rawDir, 's'); end; mkdir(rawDir);     
     
         parfor r = 1:cfg.rep
-            disp(r)
             % --- reproducible stream ------------------------------------
             rs = RandStream('Threefry','Seed',cfg.seed); rs.Substream = r;
             % --- sample -------------------------------------------------

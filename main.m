@@ -9,11 +9,12 @@ cfg.rep     = 10000;
 experiments.runBatch(cfg);
 
 %% grid run
+disp("start")
 cfg = simstudy.config.base();
-cfg.genList = ["lgamma","sqrtet","gumbel","gev","lnormal","exponential"];
-% cfg.genList = ["sqrtet",];
-cfg.fitList = ["lgamma","sqrtet","gumbel","gev","lnormal","exponential"];
-% cfg.fitList = ["lgamma"];
+% cfg.genList = ["gumbel","gev","lnormal","exponential"];
+cfg.genList = ["sqrtet"];
+cfg.fitList = ["gumbel","gev","lnormal"];
+% cfg.fitList = ["exponential"];
 cfg.Nlist   = [50, 100, 150];
 cfg.rep     = 10000;
 experiments.runBatch(cfg);                  % 3×3×3 グリッドを一気に実行

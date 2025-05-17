@@ -56,7 +56,7 @@ groups = categorical(groups);                      % カテゴリに変換する
 
 % ----- plot -----------------------------------------------------------
 figure('Position',[100 100 600 400]);
-swarmchart(groups, y, 8, 'filled', 'MarkerFaceAlpha',0.5);         % built-in / FEX 両対応
+swarmchart(groups, y, 8, 'filled', 'MarkerFaceAlpha',0.1);         % built-in / FEX 両対応
 hold on;
 
 % ----- quantile lines -------------------------------------------------
