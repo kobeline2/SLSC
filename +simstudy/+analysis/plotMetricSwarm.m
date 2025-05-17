@@ -18,7 +18,11 @@ function plotMetricSwarm(src, gen, fit, metric, Nlist, opts)
 %
 %   例:
 %     res  = simstudy.util.buildRes("results");
-%     simstudy.analysis.plotMetricSwarm(res, "exponential", "gumbel", "slsc", [50 100 150], 'Quantiles', [0.05 0.5 0.95]);
+%     simstudy.analysis.plotMetricSwarm(res,...
+%                                       "exponential", "gumbel",...
+%                                        "slsc",...
+%                                        [50 100 150],...
+%                                        'Quantiles', [0.05 0.5 0.95]);
 %
 
 arguments
@@ -39,6 +43,7 @@ dataCell = cell(numel(Nlist),1);
 
 for i = 1:numel(Nlist)
     vec = simstudy.util.getMetric(src, Nlist(i), pair, metric).';
+    % vec = vec/Nlist(i); %TODO for E[metric]
     n   = numel(vec);
     if n > M
         idx = randperm(n, M);               % ランダム間引き
@@ -63,6 +68,7 @@ hold on;
 
 for i = 1:numel(Nlist)
     vfull = simstudy.util.getMetric(src, Nlist(i), pair, metric);
+    % vfull = vfull/Nlist(i); %TODO for E[metric]
     for qi = 1:numel(qVec)
         tau = quantile(vfull, qVec(qi));
         plot([i-0.1 i+0.1], [tau tau], '-', ...
