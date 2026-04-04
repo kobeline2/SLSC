@@ -1,7 +1,7 @@
-function x = icdf_gev(theta, u)
+function x = icdf_gev(u, theta)
 %ICDF_GEV  Quantile function (inverse CDF) of the GEV distribution.
 %
-%   x = icdf_gev(theta, u)
+%   x = icdf_gev(u, theta)
 %
 %   Inputs
 %       theta : struct with fields
@@ -18,8 +18,8 @@ function x = icdf_gev(theta, u)
 %       k = 0 :  x = μ - σ * log( -log(u) )     (Gumbel limit)
 
 arguments
-    theta struct
     u {mustBeNumeric, mustBeGreaterThan(u,0), mustBeLessThan(u,1)}
+    theta struct
 end
 
 % unpack parameters

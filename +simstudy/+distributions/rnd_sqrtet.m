@@ -11,7 +11,7 @@ if ~isfield(theta,'a') || ~isfield(theta,'b')
 end
 
 % inversion method
-a = simstudy.distributions.cdf_sqrtet(theta, 0);
+a = simstudy.distributions.cdf_sqrtet(0, theta);
 u = a + (1-a).*rand(N,1);
-r = simstudy.distributions.icdf_sqrtet(theta, u); 
+r = simstudy.distributions.icdf_sqrtet(u, theta); 
 end

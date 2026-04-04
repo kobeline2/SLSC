@@ -5,35 +5,40 @@ function meta = paramMeta(model)
 %       .name      - field name in theta
 %       .domain    - 'pos' | 'real' | 'neg' | 'unit' | custom
 %
+model = lower(string(model));
+if model == "norm"
+    model = "normal";
+end
+
 switch model
-    case 'normal'
+    case "normal"
         meta = [ ...
             struct('name','mu'   ,'domain','real');  
             struct('name','sigma','domain','pos') ];
-    case 'lgamma'
+    case "lgamma"
         meta = [ ...
             struct('name','a','domain','pos');  
-            struct('name','b','domain','real') ;
+            struct('name','b','domain','pos') ;
             struct('name','c','domain','real')];
-    case 'sqrtet'
+    case "sqrtet"
         meta = [ ...
             struct('name','a','domain','pos');   
             struct('name','b','domain','pos') ];
-    case 'gumbel'
+    case "gumbel"
         meta = [ ...
-            struct('name','alpha','domain','pos');  
-            struct('name','beta' ,'domain','real') ];
-    case 'gev'
+            struct('name','alpha','domain','real');  
+            struct('name','beta' ,'domain','pos') ];
+    case "gev"
         meta = [ ...
             struct('name','k',     'domain','real');
             struct('name','sigma', 'domain','pos');
             struct('name','mu',    'domain','real') ];
-    case 'lnormal'
+    case "lnormal"
         meta = [ ...
             struct('name','c',     'domain','real');
             struct('name','mu',    'domain','real');
             struct('name','sigma', 'domain','pos') ];
-    case 'exponential'
+    case "exponential"
         meta = [ ...
             struct('name','c',  'domain','real');
             struct('name','mu', 'domain','pos')];

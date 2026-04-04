@@ -12,13 +12,13 @@ function fitRes = MLE(model, obs, theta0)
 %   Output:
 %       fitRes : struct (fields: model, theta, loglik, exitflag, output)
 
-model = lower(string(model));
+model = localCanonicalModel(model);
 
 switch model
 %----------------------------------------------------------------------
 % Built-in paths
 %----------------------------------------------------------------------
-case "norm"              % Normal(mu,sigma)
+case "normal"            % Normal(mu,sigma)
     [muHat,sigmaHat] = normfit(obs);
     theta = struct('mu',muHat,'sigma',sigmaHat);
     ll    = sum(log(normpdf(obs,muHat,sigmaHat)));
@@ -60,6 +60,13 @@ otherwise
     theta = unpack(pHat);          % ⇐ ここで a,b>0 保証
     ll    = -fval;
     fitRes = packResult(model, theta, ll, exitflag, out);
+end
+end
+
+function model = localCanonicalModel(model)
+model = lower(string(model));
+if model == "norm"
+    model = "normal";
 end
 end
 % ---

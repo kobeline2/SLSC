@@ -13,7 +13,7 @@ function x = icdf(model, u, theta)
 %   x     : numeric array   – quantiles F^{-1}(u)
 %
 % Example:
-%   x = simstudy.distributions.icdf("gamma", theta, u);
+%   x = simstudy.distributions.icdf("gamma", u, theta);
 
 arguments
     model
@@ -21,11 +21,13 @@ arguments
     theta       struct = struct()
 end
 
+model = lower(string(model));
+
 funcName = "simstudy.distributions.icdf_" + model;
 
 if isempty(which(funcName))
     error("simstudy:icdf","Unknown distribution %s",model);
 end
 
-x = feval(funcName, theta, u);
+x = feval(funcName, u, theta);
 end

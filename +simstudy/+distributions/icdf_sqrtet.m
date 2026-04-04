@@ -1,11 +1,11 @@
-function x = icdf_sqrtet(theta, u)
+function x = icdf_sqrtet(u, theta)
 % Inverse CDF for the SQRT-ET distribution
-% theta = struct('a',a,'b',b)   % 2-parameter
 % u     = vector of uniform(0,1) values
+% theta = struct('a',a,'b',b)   % 2-parameter
 
 arguments
-    theta  struct
     u      {mustBeNumeric, mustBeGreaterThan(u,0), mustBeLessThan(u,1)}
+    theta  struct
 end
 
 % CDF handle (your existing CDF implementation)

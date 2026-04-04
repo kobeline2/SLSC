@@ -1,18 +1,11 @@
 function ll = loglike_lgamma(x, theta)
-% Log-likelihood of the shifted log-gamma distribution
-%
-%   Constraint: all(x) > theta.c
+% Log-likelihood of the shifted gamma / Pearson III distribution.
 
 arguments
     x       {mustBeNumeric}
     theta   struct
 end
 
-% --- support check --------------------------------------------------
-if any(x <= theta.c)
-    warning("simstudy:loglike_lgamma:outOfSupport", ...
-        "Input x must satisfy x > theta.c (theta.c = %g).", theta.c);
-end
 a = theta.a;
 b = theta.b;
 c = theta.c;
