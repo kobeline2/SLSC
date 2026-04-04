@@ -17,6 +17,8 @@ arguments
     theta struct = struct()   
 end
 
+model = lower(string(model));
+
 funcName = "simstudy.distributions.pdf_" + model;
 
 if isempty(which(funcName))

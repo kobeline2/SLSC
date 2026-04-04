@@ -5,7 +5,7 @@
 
 classdef testICDF_LGamma < matlab.unittest.TestCase
     properties(Constant)
-        % choose some non-trivial parameters
+        % shifted gamma / Pearson III parameters
         theta = struct('a', 2.3, 'b', 1.7, 'c', 0.4);
         tol   = 1e-10;   % numerical tolerance for round-trip
     end
@@ -14,8 +14,8 @@ classdef testICDF_LGamma < matlab.unittest.TestCase
         function roundTrip(test)
             % deterministic u grid avoids random flukes
             u  = linspace(1e-6, 1-1e-6, 201).';
-            x  = simstudy.distributions.icdf_lgamma(test.theta, u);
-            u2 = simstudy.distributions.cdf( "lgamma", test.theta, x );
+            x  = simstudy.distributions.icdf_lgamma(u, test.theta);
+            u2 = simstudy.distributions.cdf("lgamma", x, test.theta);
 
             test.verifyLessThanOrEqual( max(abs(u-u2)), test.tol, ...
                 "Round-trip error exceeds tolerance");
@@ -23,7 +23,7 @@ classdef testICDF_LGamma < matlab.unittest.TestCase
 
         function monotonicity(test)
             u  = rand(1e4,1);     % random uniform
-            x  = simstudy.distributions.icdf_lgamma(test.theta, u);
+            x  = simstudy.distributions.icdf_lgamma(u, test.theta);
 
             [~,idx] = sort(u);
             dx      = diff(x(idx));

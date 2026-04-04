@@ -1,6 +1,5 @@
 function ll = loglike_lnormal(x, theta)
-% Log-likelihood of the shifted log-gamma distribution
-%
+% Log-likelihood of the shifted 3-parameter lognormal distribution.
 
 arguments
     x       {mustBeNumeric}

@@ -12,6 +12,8 @@ arguments
     theta struct = struct()                        % 任意
 end
 
+model = lower(string(model));
+
 funcName = "simstudy.distributions.rnd_" + model;
 
 if isempty(which(funcName))

@@ -1,31 +1,44 @@
-function run(cfgFunc)
-% cfgFunc : handle to config function (default = @simstudy.config.base)
+function cfg = run(cfgInput)
+%RUN Execute a single (gen, fit, N) experiment using the current cfg format.
+%
+%   cfg = experiments.run()
+%   cfg = experiments.run(cfg)
+%   cfg = experiments.run(@simstudy.config.base)
+%
+% This is a thin convenience wrapper around experiments.runBatch.
+% It expects scalar selections for:
+%   cfg.genList
+%   cfg.fitList
+%   cfg.Nlist
 
-if nargin==0, cfgFunc = @simstudy.config.single; end
-cfg = feval(cfgFunc);
-
-% -------- result folder --------
-tag = sprintf("N%d_%s2%s", cfg.sampleSize, cfg.genModel, cfg.fitModels);
-outDir = fullfile("results", tag);
-if ~exist(outDir,"dir"), mkdir(outDir), end
-
-% -------- master seed ----------
-masterSeed = cfg.seed;
-
-% -------- parallel loop --------
-parfor r = 1:cfg.repetitions
-    % sub-stream for reproducibility
-    rs = RandStream('Threefry','Seed', masterSeed);
-    rs.Substream = r; 
-
-    % --- 1 trial ---------------------------------------------
-    obs   = simstudy.distributions.rnd(cfg.genModel, cfg.sampleSize, cfg.trueParams.(cfg.genModel));
-    fitRes = simstudy.estimators.MLE(cfg.fitModels, obs, cfg.theta0.(cfg.fitModels));
-    score  = simstudy.metrics.SLSC(obs, fitRes);
-
-    % --- save -------------------------------------------------
-    fname = fullfile(outDir, sprintf("rep%04d.mat", r));
-    simstudy.util.parsave(fname, score, fitRes); 
-end
+if nargin == 0
+    cfg = simstudy.config.base();
+elseif isa(cfgInput, "function_handle")
+    cfg = feval(cfgInput);
+else
+    cfg = cfgInput;
 end
 
+cfg = localNormalizeCfg(cfg);
+experiments.runBatch(cfg);
+end
+
+function cfg = localNormalizeCfg(cfg)
+if ~isfield(cfg, "genList") || ~isfield(cfg, "fitList") || ~isfield(cfg, "Nlist")
+    error("experiments:run:InvalidCfg", ...
+        "cfg must contain genList, fitList, and Nlist.");
+end
+
+cfg.genList = string(cfg.genList);
+cfg.fitList = string(cfg.fitList);
+cfg.Nlist = double(cfg.Nlist);
+
+if numel(cfg.genList) ~= 1 || numel(cfg.fitList) ~= 1 || numel(cfg.Nlist) ~= 1
+    error("experiments:run:NonScalarGrid", ...
+        "experiments.run expects exactly one gen, one fit, and one N.");
+end
+
+cfg.genList = reshape(cfg.genList, 1, 1);
+cfg.fitList = reshape(cfg.fitList, 1, 1);
+cfg.Nlist = reshape(cfg.Nlist, 1, 1);
+end

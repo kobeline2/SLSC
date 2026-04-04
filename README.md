@@ -48,6 +48,7 @@ True parameters are calibrated to Kyoto annual maximum daily rainfall.
 ```matlab
 % Add project root to path (packages are auto-resolved)
 cd /path/to/SLSC
+paths = init();
 
 % Configure and run
 cfg = simstudy.config.base();

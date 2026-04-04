@@ -17,11 +17,13 @@ arguments
     theta struct = struct()   
 end
 
+model = lower(string(model));
+
 funcName = "simstudy.distributions.cdf_" + model;
 
 if isempty(which(funcName))
     error("simstudy:cdf", "Unknown distribution %s", model);
 end
 
-y = feval(funcName, theta, x);
+y = feval(funcName, x, theta);
 end

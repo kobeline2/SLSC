@@ -1,5 +1,6 @@
 function r = rnd_lnormal(theta, N)
-% theta: struct('c', c, 'mu', \mu, 'sigma', \sigma)
+% Random variates for the shifted 3-parameter lognormal distribution:
+%   X = c + exp(Z),  Z ~ Normal(mu, sigma^2)
 
 arguments
     theta struct
