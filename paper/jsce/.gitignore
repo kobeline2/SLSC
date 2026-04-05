@@ -10,3 +10,5 @@ out/
 *.lot
 *.bcf
 *.run.xml
+*.dvi
+main.pdf

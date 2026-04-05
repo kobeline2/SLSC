@@ -1,3 +1,4 @@
+% !TeX program = lualatex
 % Draft workspace for the JSCE paper associated with the SLSC project.
 % Open this file in VS Code and build with latexmk + lualatex.
 \documentclass{jjsce}
@@ -5,16 +6,23 @@
 
 \usepackage{amsmath}
 \usepackage{amsthm}
+\usepackage{iftex}
 \usepackage[defaultsups]{newtxtext}
 \usepackage[varg]{newtxmath}
 \usepackage{bm}
-\usepackage{graphicx}
 \usepackage{siunitx}
 \usepackage[superscript]{cite}
 \usepackage{url}
 \usepackage{endnotes}
 \usepackage[savepos]{zref}
+\ifLuaTeX
+\usepackage{graphicx}
 \usepackage[luatex,pdfencoding=auto]{hyperref}
+\else
+\usepackage[dvipdfmx]{graphicx}
+\usepackage[dvipdfmx]{hyperref}
+\usepackage{pxjahyper}
+\fi
 \usepackage{jjsce-macros}
 
 \aboveEtitlesep20mm
