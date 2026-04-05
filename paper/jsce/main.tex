@@ -1,0 +1,78 @@
+% Draft workspace for the JSCE paper associated with the SLSC project.
+% Open this file in VS Code and build with latexmk + lualatex.
+\documentclass{jjsce}
+% \documentclass[jscefinal]{jjsce}
+
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage[defaultsups]{newtxtext}
+\usepackage[varg]{newtxmath}
+\usepackage{bm}
+\usepackage{graphicx}
+\usepackage{siunitx}
+\usepackage[superscript]{cite}
+\usepackage{url}
+\usepackage{endnotes}
+\usepackage[savepos]{zref}
+\usepackage[luatex,pdfencoding=auto]{hyperref}
+\usepackage{jjsce-macros}
+
+\aboveEtitlesep20mm
+
+\newcommand{\SLSC}{\mathrm{SLSC}}
+\newcommand{\AIC}{\mathrm{AIC}}
+
+\begin{document}
+
+\jtitle{SLSC に基づく水文頻度解析の適合度評価に関する統計的再検討}
+\etitle{A STATISTICAL REASSESSMENT OF GOODNESS-OF-FIT EVALUATION IN HYDROLOGICAL FREQUENCY ANALYSIS BASED ON SLSC}
+
+\authorlist{%
+ \authorentry{小柴 孝太}{Takahiro KOSHIBA}{TK}
+}
+\Caffiliate[TK]{正会員　京都大学助教　防災研究所（\jipcode{612--8235}京都府京都市伏見区横大路下三栖東ノ口）}{koshiba.takahiro.4s@kyoto-u.ac.jp}
+
+\received{2026}{4}{5}
+\accepted{2026}{4}{5}
+
+\begin{abstract}
+\input{sections/abstract_ja}
+\end{abstract}
+
+\begin{Eabstract}
+\input{sections/abstract_en}
+\end{Eabstract}
+
+\begin{keyword}
+hydrological frequency analysis, SLSC, AIC, goodness-of-fit, Monte Carlo simulation
+\end{keyword}
+
+\maketitle
+
+\section{はじめに}
+\input{sections/introduction}
+
+\section{方法}
+\input{sections/methods}
+
+\section{結果}
+\input{sections/results}
+
+\section{考察}
+\input{sections/discussion}
+
+\section{結論}
+\input{sections/conclusion}
+
+\begin{thebibliography}{99}
+\bibitem{Takasao1986}
+高棹琢馬，宝馨：SLSC による確率分布モデルの評価基準，土木学会論文集，393/II-9，151--160，1986.
+
+\bibitem{Takara1994}
+Takara, K. and Stedinger, J. R.: Recent Japanese contributions to frequency analysis and quantile lower bound estimators, Stochastic and Statistical Methods in Hydrology and Environmental Engineering, Vol. 1, pp. 217--234, 1994.
+
+\bibitem{Filliben1975}
+Filliben, J. J.: The probability plot correlation coefficient test for normality, Technometrics, Vol. 17, No. 1, pp. 111--117, 1975.
+\end{thebibliography}
+
+\end{document}
