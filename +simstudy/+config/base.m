@@ -24,8 +24,8 @@ cfg.theta0 = struct( ...                                                   % ini
     'lnormal',      struct('c',30, 'mu',5 , 'sigma',1), ...                % [c, mu, sigma+] 
     'exponential',  struct('c',50,'mu',50)...                             % [c, mu+]
                    );
-cfg.metrics = {'SLSC', 'AIC', 'XENTROPY'};
-cfg.slscProfile = "japan_admin";
+cfg.metrics = {'SLSC', 'SLSC_X', 'AIC', 'XENTROPY'};
+cfg.slscProfile = "japan_admin"; % {japan_admin, eva_reduced}
 cfg.slscTransforms = struct();
 end
    

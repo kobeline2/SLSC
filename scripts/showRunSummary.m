@@ -21,7 +21,18 @@ end
 
 root = fullfile(paths.runsDir, runLabel);
 S = simstudy.util.loadAggregate(root, tag);
+raw = load(S.file, "exitflagArray", "runMeta");
 
 disp("Loaded aggregate:");
 disp(S.file);
 disp(structfun(@mean, S.data, "UniformOutput", false));
+
+if isfield(raw, "exitflagArray")
+    okRate = mean(raw.exitflagArray > 0);
+    fprintf("Exitflag > 0 rate: %.4f\n", okRate);
+end
+
+if isfield(raw, "runMeta")
+    disp("Run metadata:");
+    disp(raw.runMeta);
+end

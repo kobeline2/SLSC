@@ -14,6 +14,7 @@ for N   = cfg.Nlist
         parfor r = 1:cfg.rep
             % --- reproducible stream ------------------------------------
             rs = RandStream('Threefry','Seed',cfg.seed); rs.Substream = r;
+            RandStream.setGlobalStream(rs);
             % --- sample -------------------------------------------------
             obs   = simstudy.distributions.rnd(gen, N, cfg.trueParams.(gen));
             % --- MLE ----------------------------------------------------
@@ -32,7 +33,10 @@ for N   = cfg.Nlist
             simstudy.util.parsave(fullfile(rawDir,sprintf('rep%04d.mat',r)), metrics,fitRes); 
         end
         % --- aggregate --------------------------------------------------
-        simstudy.util.postCollect(rawDir,fullfile(cfg.rawDirRoot,tag,"aggregate.mat"));
+        simstudy.util.postCollect( ...
+            rawDir, ...
+            fullfile(cfg.rawDirRoot,tag,"aggregate.mat"), ...
+            localBuildRunMeta(cfg, gen, fit, N));
 
     catch ME                      %── 組 (gen,fit,N) 全体が失敗
         warning("runBatch:comboFail", ...
@@ -54,6 +58,30 @@ if isfield(cfg, "slscTransforms") && isstruct(cfg.slscTransforms)
     key = char(string(model));
     if isfield(cfg.slscTransforms, key)
         fitRes.slscTransformVariant = string(cfg.slscTransforms.(key));
+    end
+end
+end
+
+function runMeta = localBuildRunMeta(cfg, gen, fit, N)
+runMeta = struct();
+runMeta.gen = string(gen);
+runMeta.fit = string(fit);
+runMeta.N = double(N);
+runMeta.seed = double(cfg.seed);
+runMeta.rep = double(cfg.rep);
+runMeta.metrics = string(cfg.metrics);
+
+if isfield(cfg, "slscProfile") && strlength(string(cfg.slscProfile)) > 0
+    runMeta.slscProfile = string(cfg.slscProfile);
+else
+    runMeta.slscProfile = "";
+end
+
+runMeta.slscTransformVariant = "";
+if isfield(cfg, "slscTransforms") && isstruct(cfg.slscTransforms)
+    key = char(string(fit));
+    if isfield(cfg.slscTransforms, key)
+        runMeta.slscTransformVariant = string(cfg.slscTransforms.(key));
     end
 end
 end

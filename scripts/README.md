@@ -7,7 +7,7 @@ Minimal entry points for interactive work.
 - `../init.m`: initialize the project path for an interactive MATLAB session.
 - `runSmoke.m`: one tiny end-to-end run for pipeline checks.
 - `runMiniGrid.m`: small experiment for quick iteration.
-- `showRunSummary.m`: load one aggregate and print simple means.
+- `showRunSummary.m`: load one aggregate, print simple means, and inspect optimiser exitflag rates.
 - `checkMetricSingle.m`: fit one model and inspect `SLSC`, `SLSC_X`, `AIC`, and `XENTROPY`.
 - `checkSlscTransform.m`: compare the coded S-space transform with a reference reduced variate.
 - `runValidationModel.m`: validate one distribution implementation and save a figure.
