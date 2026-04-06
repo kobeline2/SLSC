@@ -57,6 +57,11 @@ SLSC/
 スライドの議論（p31–39）では，分布間の公平な比較には**X空間（線形標準化）**が望ましいと主張．
 `SLSC_x`（X空間版）は `+simstudy/+metrics/SLSC_x.m` として実装済み．
 
+S 空間変換は `cfg.slscProfile` と `cfg.slscTransforms` で切り替えられる．
+- 既定値 `japan_admin`: `gev -> (x-mu)/sigma`, `sqrtet -> b*x`
+- 代替 `eva_reduced`: CDF / reduced-variate ベースの非線形変換
+- 必要なら `cfg.slscTransforms.gev = "gev_reduced"` のようにモデル別 override も可能
+
 ### 現在の SLSC.m の実装
 - Plotting position: Cunnane式（alpha=0.4, beta=0.2）
 - 正規化定数: q=0.99 の理論分位点差

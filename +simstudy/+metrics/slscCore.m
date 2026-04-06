@@ -19,7 +19,10 @@ xStar = simstudy.distributions.icdf(fitRes.model, pp, fitRes.theta);
 
 switch space
     case "s"
-        f = simstudy.metrics.slscTransform(fitRes.model, fitRes.theta);
+        f = simstudy.metrics.slscTransform( ...
+            fitRes.model, fitRes.theta, ...
+            Profile=localSlscProfile(fitRes), ...
+            Variant=localSlscVariant(fitRes));
         z = f(x);
         zStar = f(xStar);
         qLo = simstudy.distributions.icdf(fitRes.model, Q, fitRes.theta);
@@ -39,4 +42,21 @@ if scale <= 0 || ~isfinite(scale)
 end
 
 val = sqrt(mean((z - zStar).^2)) / scale;
+end
+
+function profile = localSlscProfile(fitRes)
+if isfield(fitRes, "slscProfile") && strlength(string(fitRes.slscProfile)) > 0
+    profile = string(fitRes.slscProfile);
+else
+    profile = "japan_admin";
+end
+end
+
+function variant = localSlscVariant(fitRes)
+if isfield(fitRes, "slscTransformVariant") && ...
+        strlength(string(fitRes.slscTransformVariant)) > 0
+    variant = string(fitRes.slscTransformVariant);
+else
+    variant = "";
+end
 end

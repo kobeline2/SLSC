@@ -19,6 +19,7 @@ for N   = cfg.Nlist
             % --- MLE ----------------------------------------------------
             theta0 = cfg.theta0.(fit);
             fitRes = simstudy.estimators.MLE(fit, obs, theta0);
+            fitRes = localAttachSlscConfig(fitRes, cfg, fit);
             % --- metrics (dynamic) -------------------------------------
             metricsList = reshape(cfg.metrics,1,[]);
             metrics = struct();
@@ -40,5 +41,19 @@ for N   = cfg.Nlist
                 tag, ME.message);
     end
 end
+end
+end
+end
+
+function fitRes = localAttachSlscConfig(fitRes, cfg, model)
+if isfield(cfg, "slscProfile") && strlength(string(cfg.slscProfile)) > 0
+    fitRes.slscProfile = string(cfg.slscProfile);
+end
+
+if isfield(cfg, "slscTransforms") && isstruct(cfg.slscTransforms)
+    key = char(string(model));
+    if isfield(cfg.slscTransforms, key)
+        fitRes.slscTransformVariant = string(cfg.slscTransforms.(key));
+    end
 end
 end

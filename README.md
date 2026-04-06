@@ -62,6 +62,11 @@ experiments.runBatch(cfg);
 
 Results are saved to `results/` as `.mat` files.
 
+For the S-space SLSC, the default transform profile is `japan_admin`.
+This uses `(x-mu)/sigma` for `gev` and `b*x` for `sqrtet`.
+If you want the older reduced-variate formulas, set `cfg.slscProfile = "eva_reduced"`.
+You can also override a single model via `cfg.slscTransforms.<model>`.
+
 ## Project structure
 
 ```

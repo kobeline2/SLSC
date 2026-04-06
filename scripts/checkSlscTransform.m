@@ -5,21 +5,25 @@
 
 % init();
 paths = slscLocalPaths(true);
+cfg = simstudy.config.base();
 
 %% settings
 model = "gev";      % "gev", "lgamma", or "sqrtet"
+profile = string(cfg.slscProfile);  % "japan_admin" or "eva_reduced"
+variant = "";      % optional direct override for one model
 saveOutputs = true;
 customLabel = "";
 
 %% setup
-cfg = simstudy.config.base();
 theta = cfg.trueParams.(model);
 u = linspace(0.01, 0.99, 300).';
 x = simstudy.distributions.icdf(model, u, theta);
 
-f = simstudy.metrics.slscTransform(model, theta);
+[f, info] = simstudy.metrics.slscTransform(model, theta, ...
+    Profile=profile, Variant=variant);
+variant = info.variant;
 uCode = f(x);
-[uRef, refLabel] = localReferenceTransform(model, x, theta);
+[uRef, refLabel] = localReferenceTransform(model, x, theta, info.variant);
 err = max(abs(uCode - uRef));
 
 %% figure
@@ -30,7 +34,7 @@ nexttile;
 plot(x, uCode, "LineWidth", 2, "Color", [0.1 0.25 0.55]);
 hold on;
 plot(x, uRef, "--", "LineWidth", 1.6, "Color", [0.8 0.2 0.2]);
-title(model + " transform");
+title(model + " transform (" + info.variant + ")");
 xlabel("x");
 ylabel("u(x)");
 legend("coded", refLabel, "Location", "best");
@@ -67,7 +71,8 @@ if saveOutputs
     figPath = fullfile(outDir, "transform_check.png");
     matPath = fullfile(outDir, "transform_check.mat");
     exportgraphics(fig, figPath, "Resolution", 200);
-    save(matPath, "model", "theta", "x", "uCode", "uRef", "err", "refLabel");
+    save(matPath, "model", "profile", "variant", "info", ...
+        "theta", "x", "uCode", "uRef", "err", "refLabel");
 
     saveInfo.dir = string(outDir);
     saveInfo.figure = string(figPath);
@@ -79,6 +84,8 @@ disp("Model:");
 disp(model);
 disp("Theta:");
 disp(theta);
+disp("Transform info:");
+disp(info);
 disp("Max abs error:");
 disp(err);
 if saveOutputs
@@ -86,18 +93,37 @@ if saveOutputs
     disp(saveInfo);
 end
 
-function [uRef, label] = localReferenceTransform(model, x, theta)
+function [uRef, label] = localReferenceTransform(model, x, theta, variant)
 model = string(model);
+variant = string(variant);
 
 switch model
     case "gev"
-        Fx = simstudy.distributions.cdf(model, x, theta);
-        uRef = -log(-log(Fx));
-        label = "-log(-log(F(x)))";
+        switch variant
+            case "linear"
+                uRef = (x - theta.mu) ./ theta.sigma;
+                label = "(x - mu) / sigma";
+            case "gev_reduced"
+                Fx = simstudy.distributions.cdf(model, x, theta);
+                uRef = -log(-log(Fx));
+                label = "-log(-log(F(x)))";
+            otherwise
+                error("checkSlscTransform:UnknownVariant", ...
+                    "Reference transform is not defined for GEV variant %s.", variant);
+        end
     case "sqrtet"
-        Fx = simstudy.distributions.cdf(model, x, theta);
-        uRef = -log(-log(Fx));
-        label = "-log(-log(F(x)))";
+        switch variant
+            case "bx"
+                uRef = theta.b .* x;
+                label = "b * x";
+            case "sqrtet_reduced"
+                Fx = simstudy.distributions.cdf(model, x, theta);
+                uRef = -log(-log(Fx));
+                label = "-log(-log(F(x)))";
+            otherwise
+                error("checkSlscTransform:UnknownVariant", ...
+                    "Reference transform is not defined for sqrt-ET variant %s.", variant);
+        end
     case "lgamma"
         Fx = simstudy.distributions.cdf(model, x, theta);
         uRef = gaminv(Fx, theta.b, 1);

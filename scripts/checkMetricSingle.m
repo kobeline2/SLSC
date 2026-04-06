@@ -10,6 +10,7 @@
 
 % init();
 paths = slscLocalPaths(true);
+cfg = simstudy.config.base();
 
 %% settings
 dataMode = "synthetic";   % "synthetic" or "workspace"
@@ -19,10 +20,10 @@ N = 100;
 seed = 42;
 saveOutputs = false;
 customLabel = "";
+slscProfile = string(cfg.slscProfile);
+slscVariant = "";
 
 %% data preparation
-cfg = simstudy.config.base();
-
 switch dataMode
     case "synthetic"
         rng(seed, "twister");
@@ -43,6 +44,15 @@ end
 
 %% fit and metrics
 fitRes = simstudy.estimators.MLE(fit, obs, cfg.theta0.(fit));
+fitRes.slscProfile = slscProfile;
+fitKey = char(fit);
+if strlength(slscVariant) > 0
+    fitRes.slscTransformVariant = slscVariant;
+elseif isfield(cfg, "slscTransforms") && isfield(cfg.slscTransforms, fitKey)
+    fitRes.slscTransformVariant = string(cfg.slscTransforms.(fitKey));
+end
+[~, slscInfo] = simstudy.metrics.slscTransform(fit, fitRes.theta, ...
+    Profile=fitRes.slscProfile, Variant=localSlscVariant(fitRes));
 
 scores = struct();
 scores.slsc = simstudy.metrics.score("SLSC", obs, fitRes);
@@ -112,9 +122,19 @@ disp("Scores:");
 disp(scores);
 disp("Fit result:");
 disp(fitRes);
+disp("SLSC transform info:");
+disp(slscInfo);
 if saveOutputs
     disp("Saved outputs:");
     disp(saveInfo);
+end
+
+function variant = localSlscVariant(fitRes)
+if isfield(fitRes, "slscTransformVariant")
+    variant = string(fitRes.slscTransformVariant);
+else
+    variant = "";
+end
 end
 
 function xGrid = localGrid(obs, fit, theta)
