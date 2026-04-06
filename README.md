@@ -66,8 +66,6 @@ Results are saved to `results/` as `.mat` files.
 
 ```
 SLSC/
-├── main.m                 Entry point and usage examples
-├── CLAUDE.md              Project context for Claude Code
 ├── +simstudy/             Core package
 │   ├── +config/           Simulation parameters and true values
 │   ├── +distributions/    Distribution implementations (rnd, pdf, loglike, icdf)

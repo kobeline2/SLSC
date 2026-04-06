@@ -23,7 +23,6 @@
 ```
 SLSC/
 ├── AGENTS.md              ← このファイル
-├── main.m                 ← エントリーポイント（デモ・実行例）
 ├── +simstudy/             ← コアパッケージ
 │   ├── +config/           ← シミュレーション設定（true params, theta0）
 │   ├── +distributions/    ← 分布の実装（rnd, pdf, loglike, icdf, cdf）
@@ -56,7 +55,7 @@ SLSC/
 ### SLSC の定義
 現在の `+simstudy/+metrics/SLSC.m` は**S空間（非線形標準化）**で計算している．
 スライドの議論（p31–39）では，分布間の公平な比較には**X空間（線形標準化）**が望ましいと主張．
-→ `SLSC_x`（X空間版）の実装追加が課題．
+`SLSC_x`（X空間版）は `+simstudy/+metrics/SLSC_x.m` として実装済み．
 
 ### 現在の SLSC.m の実装
 - Plotting position: Cunnane式（alpha=0.4, beta=0.2）
@@ -81,7 +80,9 @@ SLSC/
 - 再現性のために `RandStream('Threefry', 'Seed', seed)` を使用
 - 結果は `results/<tag>/raw/rep****.mat` → `aggregate.mat` に集約
 
-## 作業ログ（最終更新: 2026-04-03）
+## 作業ログ（最終更新: 2026-04-06）
 
 - プロジェクト構造の把握・AGENTS.md 作成
-- 次のステップ：SLSC.m の統計的正確性の検証，X空間版SLSC の実装
+- distributions API を統一し，`cdf_*` 実装を追加
+- `SLSC_x`，validation 導線，軽量スクリプト群を追加
+- 次のステップ：`gev`，`lgamma`，`sqrtet` の S 空間変換と文献定義の照合
