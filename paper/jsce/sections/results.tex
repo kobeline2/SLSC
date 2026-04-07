@@ -1,10 +1,97 @@
-本節には，主要なシミュレーション結果を図表とともに整理する。現時点では以下の観点を主結果候補として想定している。
+以下では, まず $N=50,100,150$ の3水準について, 各条件100反復の短い試算結果を用いて主要な傾向を確認する.
 
-\begin{itemize}
-\item SLSC の標本サイズ依存性
-\item 真の分布と当てはめ分布の組合せごとの挙動
-\item 3 母数対数正規分布に対する系統的優位の有無
-\item AIC と SLSC の選択結果の一致率
-\end{itemize}
+\subsection{標本数依存性}
+図\ref{fig:slsc_n_scaling}に, 各 sampler に対する X 空間 SLSC の平均値と標準偏差を示す. 
+真の分布と当てはめ分布が一致する曲線は, いずれも概ね $N^{-1/2}$ の基準線に沿って減少した. 
+一方, 真の分布と当てはめ分布が一致しない曲線では, 標本数を増やしても低下は限定的であり, 正しいモデルに比べて高い水準にとどまった. 
+すなわち, 正則な場合には標本誤差の減少に応じて SLSC が縮小するのに対し, ミススペック時にはモデルずれに由来する系統誤差が残るという基本的な構図が, 6分布比較でも確認された.
 
-結果図は `fig/` に保存し，本節で \verb|\includegraphics| を用いて差し込む。
+とくに, Gumbel, GEV, LP3, Exp, LN3 では, 真の分布に対応する曲線が最も明瞭に $N^{-1/2}$ に近い傾きを示した. 
+SqrtEt でも同様の減少傾向は認められるが, 他の候補分布との差は必ずしも大きくない. 
+したがって, SLSC を固定閾値で解釈するのではなく, 少なくとも標本数と候補分布群を踏まえて相対的に読む必要がある.
+
+\begin{figure}[tb]
+\centering
+\includegraphics[width=\linewidth]{fig/results/slsc_n_scaling_panels.pdf}
+\caption{各 sampler に対する X 空間 SLSC の標本数依存性（平均$\pm$標準偏差）．破線は $N^{-1/2}$ の基準線を表す．}
+\label{fig:slsc_n_scaling}
+\end{figure}
+
+\subsection{6分布に拡張した比較結果}
+表\ref{tab:relative_slsc}は, 各 sampler について, 真の分布による X 空間 SLSC を 1 として他の候補分布の相対値を示したものである. 
+Gumbel, GEV, LP3, SqrtEt, Exp の列では, 真の分布より小さい値を与える組合せも散見されるが, その偏り方は分布ごとに異なる. 
+これに対し, LN3 を対数標準化した S 空間 SLSC [LN3(S)] は, 6つの sampler すべてで 1 未満となった. 
+すなわち, 真の分布に依らず LN3(S) が一様に小さく出やすいという傾向が, 6分布比較でも維持されている. 
+他方, 同じ LN3 でも X 空間で評価した LN3(X) では, GEV, LP3, Exp に対して 1 を上回っており, 偏りはかなり緩和されている.
+
+表\ref{tab:true_model_rate}に, 各 sampler について真の分布が最小値として選ばれた割合を示す. 
+X 空間 SLSC の真モデル選択率は 0.16--0.50 程度であり, 6分布比較そのものが容易ではないことが分かる. 
+しかし, S 空間 SLSC は LN3 を真の分布とした場合に 0.740 と高い一方, それ以外の sampler では 0.070--0.293 にとどまった. 
+これは, S 空間 SLSC が真の分布の識別よりも LN3 の非線形標準化に強く引き寄せられていることを示唆する.
+
+\begin{table}[tb]
+\caption{真の分布で正規化した相対 SLSC の比較（$N=50,100,150$ の平均）}
+\label{tab:relative_slsc}
+\centering
+\scriptsize
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{lrrrrrrr}
+\hline
+sampler & Gumbel & GEV & LP3 & SqrtEt & Exp & LN3(X) & LN3(S) \\
+\hline
+Gumbel & 1.000 & \textbf{0.803} & \textbf{0.914} & 1.350 & 3.111 & \textbf{0.878} & \textbf{0.754} \\
+GEV    & 1.648 & 1.000 & 1.334 & 1.272 & 2.742 & 1.085 & \textbf{0.809} \\
+LP3    & 1.302 & 1.120 & 1.000 & 1.228 & 2.616 & 1.059 & \textbf{0.801} \\
+SqrtEt & 1.418 & \textbf{0.783} & 1.054 & 1.000 & 1.936 & \textbf{0.837} & \textbf{0.613} \\
+Exp    & 2.247 & 2.054 & 1.209 & 1.578 & 1.000 & 1.494 & \textbf{0.800} \\
+LN3    & 1.630 & \textbf{0.988} & 1.195 & 1.220 & 2.502 & 1.000 & \textbf{0.761} \\
+\hline
+\end{tabular}
+\par\footnotesize
+太字は真の分布より小さい相対値を表す．LN3(X) は X 空間評価，LN3(S) は対数標準化した S 空間評価である．
+\end{table}
+
+\begin{table}[tb]
+\caption{sampler ごとの真モデル選択率（$N=50,100,150$ の平均）}
+\label{tab:true_model_rate}
+\centering
+\small
+\begin{tabular}{lrrr}
+\hline
+sampler & X 空間 SLSC & S 空間 SLSC & AIC \\
+\hline
+Gumbel & 0.177 & 0.127 & 0.637 \\
+GEV    & 0.340 & 0.133 & 0.023 \\
+LP3    & 0.440 & 0.113 & 0.577 \\
+SqrtEt & 0.163 & 0.070 & 0.550 \\
+Exp    & 0.497 & 0.293 & 0.140 \\
+LN3    & 0.213 & 0.740 & 0.050 \\
+\hline
+\end{tabular}
+\par\footnotesize
+AIC の LN3 行は参考値として扱う．
+\end{table}
+
+\subsection{AIC との比較}
+図\ref{fig:criterion_compare}に, X 空間 SLSC, S 空間 SLSC, AIC の3規準について, 標本数ごとの真モデル選択率を示す. 
+短い試算では, AIC の真モデル選択率も sampler によって大きく異なり, つねに最良というわけではない. 
+実際, Gumbel, LP3, SqrtEt では AIC が比較的高い選択率を与えたのに対し, GEV, Exp, LN3 では高くなかった. 
+しかし少なくとも, S 空間 SLSC のように LN3 の場合だけ極端に高い選択率を示し, 他の sampler では一様に低下するという一方向の偏りは見られない. 
+この意味で, AIC は本稿の主役ではないものの, 非線形標準化された SLSC の不自然さを相対化する参照規準として有用である.
+
+なお, LN3 に対する AIC の取扱いには尤度論上の論点が残るため, 本稿では LN3 行を参考値として読むにとどめる. 
+それでも, 図\ref{fig:criterion_compare} が示すように, S 空間 SLSC の問題は「AIC が常に優れている」という形ではなく, むしろ「S 空間 SLSC が特定の分布を構造的に優遇しやすい」という形で理解するのが適切である.
+
+\begin{figure}[tb]
+\centering
+\includegraphics[width=\linewidth]{fig/results/criterion_compare.pdf}
+\caption{真モデル選択率の標本数依存性．X 空間 SLSC，S 空間 SLSC，AIC を比較した．}
+\label{fig:criterion_compare}
+\end{figure}
+
+\subsection{X 空間と S 空間の差}
+表\ref{tab:relative_slsc} の LN3(X) 列と LN3(S) 列を比較すると, 両者の差は明瞭である. 
+LN3(X) は GEV, LP3, Exp に対して 1 を上回っており, 真の分布より常に有利というわけではない. 
+これに対し, LN3(S) は 6つの sampler すべてで 1 未満となり, 真の分布と無関係に小さな値を与えている. 
+また, 図\ref{fig:criterion_compare} においても, S 空間 SLSC は LN3 でのみ高い真モデル選択率を示し, 他の sampler では低い値にとどまった. 
+したがって, LN3 の優位性のかなりの部分は分布そのものではなく, 対数標準化された S 空間の定義に起因すると考えるのが自然である.
