@@ -4,30 +4,47 @@
 図\ref{fig:slsc_n_scaling}に, 各 sampler に対する X 空間 SLSC の平均値と標準偏差を示す. 
 真の分布と当てはめ分布が一致する曲線は, いずれも概ね $N^{-1/2}$ の基準線に沿って減少した. 
 一方, 真の分布と当てはめ分布が一致しない曲線では, 標本数を増やしても低下は限定的であり, 正しいモデルに比べて高い水準にとどまった. 
-すなわち, 正則な場合には標本誤差の減少に応じて SLSC が縮小するのに対し, ミススペック時にはモデルずれに由来する系統誤差が残るという基本的な構図が, 6分布比較でも確認された.
+すなわち, 正則な場合には標本誤差の減少に応じて SLSC が縮小するのに対し, 真の分布と当てはめ分布が一致しないとモデルずれに由来する系統誤差が残ることが, 6分布比較でも確認された.
 
 とくに, Gumbel, GEV, LP3, Exp, LN3 では, 真の分布に対応する曲線が最も明瞭に $N^{-1/2}$ に近い傾きを示した. 
 SqrtEt でも同様の減少傾向は認められるが, 他の候補分布との差は必ずしも大きくない. 
 したがって, SLSC を固定閾値で解釈するのではなく, 少なくとも標本数と候補分布群を踏まえて相対的に読む必要がある.
 
-\begin{figure}[tb]
+\begin{figure*}[t]
 \centering
-\includegraphics[width=\linewidth]{fig/results/slsc_n_scaling_panels.pdf}
+\includegraphics[width=\textwidth]{fig/results/slsc_n_scaling_panels.pdf}
 \caption{各 sampler に対する X 空間 SLSC の標本数依存性（平均$\pm$標準偏差）．破線は $N^{-1/2}$ の基準線を表す．}
 \label{fig:slsc_n_scaling}
-\end{figure}
+\end{figure*}
 
 \subsection{6分布に拡張した比較結果}
-表\ref{tab:relative_slsc}は, 各 sampler について, 真の分布による X 空間 SLSC を 1 として他の候補分布の相対値を示したものである. 
-Gumbel, GEV, LP3, SqrtEt, Exp の列では, 真の分布より小さい値を与える組合せも散見されるが, その偏り方は分布ごとに異なる. 
-これに対し, LN3 を対数標準化した S 空間 SLSC [LN3(S)] は, 6つの sampler すべてで 1 未満となった. 
-すなわち, 真の分布に依らず LN3(S) が一様に小さく出やすいという傾向が, 6分布比較でも維持されている. 
-他方, 同じ LN3 でも X 空間で評価した LN3(X) では, GEV, LP3, Exp に対して 1 を上回っており, 偏りはかなり緩和されている.
+次に, 真の分布と当てはめ分布の組合せを6分布全体に拡張し, SLSC の平均値, 真の分布で正規化した相対値, および選択頻度を比較した. 
+その結果, 既往研究で指摘された SLSC の性質, すなわち標本数依存性とモデル選択の不安定性は, より広い分布群に対しても概ね維持された.
 
-表\ref{tab:true_model_rate}に, 各 sampler について真の分布が最小値として選ばれた割合を示す. 
-X 空間 SLSC の真モデル選択率は 0.16--0.50 程度であり, 6分布比較そのものが容易ではないことが分かる. 
-しかし, S 空間 SLSC は LN3 を真の分布とした場合に 0.740 と高い一方, それ以外の sampler では 0.070--0.293 にとどまった. 
-これは, S 空間 SLSC が真の分布の識別よりも LN3 の非線形標準化に強く引き寄せられていることを示唆する.
+ここで強調すべきは, 本稿が理論的に示した内容と, 数値実験によって確認した内容とは区別されるべきことである. 
+本稿で理論的に示したのは, SLSC が線形変換に対してのみ不変であり, 非線形標準化を施した S 空間の SLSC は, 一般に X 空間の SLSC と一致しない, という点である. 
+すなわち, 非線形変換は SLSC の距離尺度そのものを変形し, 分布比較指標としての公平性を損なう. 
+この点は, 変換の平均値の定理に基づく整理から, 数学的に示すことができる.
+
+一方, 非線形標準化された SLSC が, 具体的にどの方向へずれるか, すなわち X 空間の SLSC より小さくなりやすいかどうかは, 一般には自明ではない. 
+その方向は, 誤差の位置分布と標準化関数の形との組合せに依存し, 数学的に常に一方向へずれることを主張することはできない. 
+したがって, この点は理論だけでなく, 実際の水文量の大きさを想定した数値実験によって確認する必要がある.
+
+本稿の数値実験では, とくに真の分布がグンベル分布や一般化極値分布である場合にも, 3母数対数正規分布を対数標準化した S 空間の SLSC, すなわち LN3(S), が, 真の分布に対する X 空間 SLSC より小さい値を与える場合が多かった. 
+この傾向は, 雨量のように正の値をとり, かつ上側の順序統計量が大きな値をとるデータでは, 3母数対数正規分布の標準化
+\[
+s=\frac{\log(x-c)-\mu_L}{\sigma_L}
+\]
+に対して
+\[
+f'(x)=\frac{1}{\sigma_L(x-c)}
+\]
+であることから, 大きい $x$ に対応する誤差ほど小さい重みが掛かりやすいことと整合的である. 
+すなわち, 雨量規模の範囲では, 上側の順序統計量に由来する誤差が圧縮され, LN3(S) の SLSC が小さく出やすい条件が生じやすい. 
+ただし, これは非線形標準化が常に SLSC を引き下げることを意味するものではなく, あくまで本稿で扱った数値条件の下で確認された傾向である.
+
+他方, 3母数対数正規分布を X 空間で評価した場合には, このような過度の優位性はかなり緩和された. 
+このことは, 問題の少なくとも一部が分布そのものにあるのではなく, 非線形標準化によって導入される距離尺度の変形に由来していることを示している.
 
 \begin{table}[tb]
 \caption{真の分布で正規化した相対 SLSC の比較（$N=50,100,150$ の平均）}
@@ -72,22 +89,50 @@ LN3    & 0.213 & 0.740 & 0.050 \\
 AIC の LN3 行は参考値として扱う．
 \end{table}
 
-\subsection{AIC との比較}
-図\ref{fig:criterion_compare}に, X 空間 SLSC, S 空間 SLSC, AIC の3規準について, 標本数ごとの真モデル選択率を示す. 
-短い試算では, AIC の真モデル選択率も sampler によって大きく異なり, つねに最良というわけではない. 
-実際, Gumbel, LP3, SqrtEt では AIC が比較的高い選択率を与えたのに対し, GEV, Exp, LN3 では高くなかった. 
-しかし少なくとも, S 空間 SLSC のように LN3 の場合だけ極端に高い選択率を示し, 他の sampler では一様に低下するという一方向の偏りは見られない. 
-この意味で, AIC は本稿の主役ではないものの, 非線形標準化された SLSC の不自然さを相対化する参照規準として有用である.
+\subsection{SLSC+ジャックナイフ法および AIC との比較}
+次に, モデル判別の観点から, X 空間 SLSC, S 空間 SLSC, SLSC+ジャックナイフ法, および AIC を比較した. ここで SLSC+ジャックナイフ法は, 式\eqref{eq:slsc_threshold} を満たす候補の中でジャックナイフ幅 $W_J$ が最小となる分布を採択する実務的な手順である. AIC は参照指標として併記した.
 
-なお, LN3 に対する AIC の取扱いには尤度論上の論点が残るため, 本稿では LN3 行を参考値として読むにとどめる. 
-それでも, 図\ref{fig:criterion_compare} が示すように, S 空間 SLSC の問題は「AIC が常に優れている」という形ではなく, むしろ「S 空間 SLSC が特定の分布を構造的に優遇しやすい」という形で理解するのが適切である.
-
-\begin{figure}[tb]
+表\ref{tab:true_select_rate}に, sampler ごとの真モデル選択率を示す. ここで真モデル選択率とは, 各反復において最終的に採択された分布が真の分布と一致した割合である.
+\IfFileExists{out/criterion_selection_table.tex}{%
+\input{out/criterion_selection_table}
+}{%
+\begin{table}[tb]
+\caption{sampler ごとの真モデル選択率}
+\label{tab:true_select_rate}
 \centering
-\includegraphics[width=\linewidth]{fig/results/criterion_compare.pdf}
-\caption{真モデル選択率の標本数依存性．X 空間 SLSC，S 空間 SLSC，AIC を比較した．}
+\footnotesize
+\texttt{paper/jsce/code/run\_criterion\_compare.m} により生成予定
+\end{table}
+}
+
+また, 図\ref{fig:criterion_compare}に, sampler ごとの真モデル選択率の $N$ 依存性を示す. 
+% TODO: 実結果に応じて, 以下の文を埋める
+本稿の計算では, [ここに主要な傾向を記述: 例えば「X 空間 SLSC は最小 SLSC よりも安定であり, S 空間 SLSC は 3母数対数正規分布を過大に選びやすい. SLSC+ジャックナイフ法は, 最小 SLSC よりは偏りが弱いが, なお [分布名] を選びやすい傾向を示した. AIC は少なくとも LN3(S) のような一方向の偏りを示さなかった.」].
+
+\IfFileExists{out/criterion_selection_table.tex}{%
+\IfFileExists{fig/results/criterion_compare.pdf}{%
+\begin{figure*}[t]
+\centering
+\includegraphics[width=\textwidth]{fig/results/criterion_compare.pdf}
+\caption{sampler ごとの真モデル選択率の比較．SLSC+ジャックナイフ法と AIC を併記した．}
 \label{fig:criterion_compare}
-\end{figure}
+\end{figure*}
+}{%
+\begin{figure*}[t]
+\centering
+\caption{sampler ごとの真モデル選択率の比較．}
+\label{fig:criterion_compare}
+\end{figure*}
+}
+}{%
+\begin{figure*}[t]
+\centering
+\caption{sampler ごとの真モデル選択率の比較．}
+\label{fig:criterion_compare}
+\end{figure*}
+}
+
+
 
 \subsection{X 空間と S 空間の差}
 表\ref{tab:relative_slsc} の LN3(X) 列と LN3(S) 列を比較すると, 両者の差は明瞭である. 

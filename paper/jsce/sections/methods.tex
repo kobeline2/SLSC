@@ -1,11 +1,148 @@
-解析には，SLSC プロジェクトで実装したシミュレーションコードを用いる。基本的な流れは，真の分布から独立同分布標本を生成し，各候補分布を最尤推定で当てはめたうえで，SLSC，AIC，および補助指標を計算して比較するものである。
+本稿では, SLSC の性質を確認するために, 真の分布から独立同分布標本を生成し, 各候補分布を当てはめた上で適合度指標を比較するモンテカルロ計算を行った. 
+対象とした分布は, Gumbel, GEV, LP3, SqrtEt, LN3, およびExpの6分布である. 
+各分布について, 真の分布として標本を発生させる場合と, 当てはめ分布として用いる場合の両方を考えた. 
 
-対象分布として，Gumbel 分布，GEV 分布，3 母数対数正規分布，対数ガンマ分布，および sqrt-ET 分布を想定する。標本サイズ，反復回数，真のパラメータ条件は MATLAB 側の設定ファイルと整合させ，図表はこの論文ディレクトリの `fig/` に出力して整理する。
+\subsection{SLSC の定義}
+日本の水文頻度解析において SLSC として一般に用いられてきたのは, 観測値を標準変量に変換した後, その空間で観測値と理論値のずれを評価する定義である. 
+すなわち, 観測値 $x_{(i)}$ を標準変量 $s=f(x)$ に写像し, さらにモデル分布に基づく理論値を $s_{(i)}^{\ast}$ とするとき, SLSC は通常
+\begin{equation}
+\mathrm{SLSC}
+=
+\frac{
+\sqrt{\dfrac{1}{N}\sum_{i=1}^{N}\bigl(s_{(i)}-s_{(i)}^{\ast}\bigr)^2}
+}{
+\left|s_q^{\ast}-s_{1-q}^{\ast}\right|}
+\label{eq:slscs}
+\end{equation}
+と定義される. 
+ここで, $q$ は上側分位を表す定数であり, 実務では $q=0.99$ が多く用いられる. 
+本稿では, この標準変量空間で定義された SLSC を \(S\) 空間における SLSC と呼ぶ.
 
-必要に応じて，本節には以下を追記する。
-\begin{itemize}
-\item SLSC の定義と標準化手順
-\item X 空間版 SLSC の定義
-\item 推定法と初期値の設定
-\item 比較実験のケース分け
-\end{itemize}
+一方, 標準変量変換を明示せず, 観測値の順序統計量を $x_{(i)}$, モデル分布に基づく理論分位を $x_{(i)}^{\ast}$ として, 実データの空間で直接
+\begin{equation}
+\mathrm{SLSC}_x
+=
+\frac{
+\sqrt{\dfrac{1}{N}\sum_{i=1}^{N}\bigl(x_{(i)}-x_{(i)}^{\ast}\bigr)^2}
+}{
+\left|x_q^{\ast}-x_{1-q}^{\ast}\right|}
+\label{eq:slscx}
+\end{equation}
+と書くこともできる. 
+本稿では, これを \(X\) 空間における SLSC と呼ぶ. 
+葛葉・水木\cite{KuzuhaMizuki2022} でも指摘されているように, 標準変量が
+\[
+s=ax+b
+\]
+の形の線形変換である場合には, \eqref{eq:slscs} と \eqref{eq:slscx} は一致する. 
+したがって, \(X\) 空間における SLSC は, 日本で一般に用いられてきた \(S\) 空間の定義と無関係な新指標ではなく, 少なくとも線形標準化の場合には同値な表現である. 
+他方, 標準変量が非線形である場合には, \eqref{eq:slscs} と \eqref{eq:slscx} は一般に一致せず, どの空間で距離を測るかによって SLSC の値と解釈が変わり得る.
+
+標準変量の求め方は一般に一意ではなく, 分布ごとに複数の定義が提案されている. 
+例えば, DHI の EVA technical reference では, 各分布に対する標準変量や reduced variate の取り方が Appendix A に一覧されている\cite{DHI2022}. 
+また, 葛葉・水木\cite{KuzuhaMizuki2022} では, 3母数分布や SqrtEt を例に, 標準変量の選択によって SLSC の値と解釈が変わり得ることが論じられている. 
+本研究では, 日本で多く用いられている標準変量を採用した. 
+各分布に対して用いた標準変量 $s=f(x)$ を表\ref{tab:standard_variate}に示す. 
+ここで, Gumbel, LP3, SqrtEt については
+\[
+s = \frac{x-\mu_s}{\sigma_s}
+\]
+の形の線形標準化を用いた. 
+$\mu_s$ は位置母数, $\sigma_s$ は尺度母数の総称であり, 実際の記号は分布によって異なる. 
+例えば, Gumbel では $(\mu_s,\sigma_s)=(\alpha,\beta)$, LP3 では $(c,a)$, SqrtEt では $(c,\mu)$ に対応する. 
+また, LN3 については, 2(2) の検討のため, \(X\) 空間での評価に加えて, 慣用的な対数標準化による \(S\) 空間評価も行った.
+
+\begin{table}[tb]
+\caption{本研究で用いた標準変量 $s=f(x)$}
+\label{tab:standard_variate}
+\centering
+\small
+\setlength{\tabcolsep}{4pt}
+\begin{tabular}{ll}
+\hline
+分布 & 標準変量 $f(x)$ \\
+\hline
+Gumbel & $(x-\alpha)/\beta$ \\
+GEV    & $(x-\mu)/\sigma$ \\
+LP3    & $(x-c)/a$ \\
+SqrtEt & $bx$ \\
+Exp    & $(x-c)/\mu$ \\
+LN3    & $\{\log(x-c)-\mu_L\}/\sigma_L$ \\
+\hline
+\end{tabular}
+\par\footnotesize
+LN3 については, X 空間での評価も別途行い, 表中の式は S 空間での対数標準化に対応する.
+\end{table}
+
+以下で特に断らない限り, S 空間の計算結果はこの定義に基づく.
+
+\subsection{X 空間と S 空間の関係}
+$f$ が $C^1$ 級関数であれば, 平均値の定理により, 各 $i$ に対して
+\begin{equation}
+f\bigl(x_{(i)}\bigr)-f\bigl(x_{(i)}^{\ast}\bigr)
+= f'(\xi_i)\bigl(x_{(i)}-x_{(i)}^{\ast}\bigr),
+\,
+\xi_i\in\bigl(x_{(i)},x_{(i)}^{\ast}\bigr)
+\label{eq:mvt}
+\end{equation}
+が成り立つ. 
+したがって, S 空間での二乗誤差は
+\begin{equation}
+\sum_{i=1}^{N}\bigl(s_{(i)}-s_{(i)}^{\ast}\bigr)^2
+=
+\sum_{i=1}^{N}\bigl(f'(\xi_i)\bigr)^2\bigl(x_{(i)}-x_{(i)}^{\ast}\bigr)^2
+\label{eq:weightednorm}
+\end{equation}
+となり, これは X 空間での誤差に対して, 点ごとに異なる重み $f'(\xi_i)$ を掛けた量である. 
+この意味で, 非線形標準化された SLSC は元の SLSC と同じ距離を測っているのではなく, 別の重み付き規準へ変質している. 
+より直感的に言えば, 同じ降雨量のずれであっても, 採用する分布によって大きく数えられたり小さく数えられたりすることになり, 分布ごとに異なる物差しで誤差を測っていることになる.
+
+さらに, 変換に対する不変性について次の命題が成り立つ.
+
+\textbf{命題}. 
+すべてのデータとすべての理論分位に対して, X 空間の SLSC と S 空間の SLSC が一致するための必要十分条件は, $f$ が線形関数 $f(x)=ax+b$ であることである.
+
+この命題の証明は, \eqref{eq:mvt} から分子には $N$ 個の係数 $f'(\xi_i)$ が現れるのに対し, 分母には分位点間の1個の係数しか現れないことを用いればよい. 
+$f'$ が定数である場合に限って両者は打ち消し合い, そのときに限って SLSC は不変となる.
+
+\subsection{ジャックナイフ法および情報量規準}
+実務では, 分布選択に最小 SLSC を直接用いるよりも, 一定の閾値を満たした候補の中からジャックナイフ幅の小さい分布を選ぶ手順が用いられることが多い\cite{Fujibe2011}. 本稿では, この手順を SLSC+ジャックナイフ法と呼ぶ.
+
+ある再現期間 $T_{\mathrm{ref}}$ に対する確率水文量を $P$ とする. 標本の $i$ 番目を除いた $N-1$ 個のデータから得られる推定値を $P_i$ と書き, その平均を
+\begin{equation}
+\bar{P}=\frac{1}{N}\sum_{i=1}^{N}P_i
+\end{equation}
+とする. また, $P_i$ の標準偏差を $s_P$ とすると, ジャックナイフ幅は
+\begin{equation}
+W_J = (N-1)s_P
+\label{eq:jackwidth}
+\end{equation}
+と定義する. 本稿では, 各候補分布について SLSC を計算した後, 閾値
+\begin{equation}
+\mathrm{SLSC}\le 0.04
+\label{eq:slsc_threshold}
+\end{equation}
+を満たす分布の中で $W_J$ が最小となるものを採択する手順を, 実務に近い判別規準として用いた.
+% TODO: 実装上, 閾値を満たす候補が存在しない場合の扱いをここに明記する.
+
+比較のため, 情報量規準 AIC も算出した. AIC は
+\begin{equation}
+\mathrm{AIC} = -2\ell(\hat{\theta}) + 2k
+\label{eq:aic}
+\end{equation}
+で定義される. ここで, $\ell(\hat{\theta})$ は最大対数尤度, $k$ は自由母数の個数である. 本稿では, AIC は SLSC 系規準の振る舞いを相対化するための参照指標として用いる. ただし, 3母数対数正規分布については尤度論上の問題が残るため, AIC の扱いは参考値として解釈する.
+
+\subsection{数値計算の条件}
+各分布について, 標本サイズ $N$ を複数水準設定し, 真の分布から独立同分布標本を多数回発生させた. 
+
+各標本に対し, 候補分布ごとに母数推定を行い, X 空間の SLSC および, 必要に応じて S 空間の SLSC を算出した. 
+
+プロッティングポジションは Cunnane 式
+% \begin{equation}
+% p_i = \frac{i-0.4}{N+0.2}
+% \label{eq:cunnane}
+% \end{equation}
+を用いた. 
+
+また, LN3については, X 空間で評価した場合と, 表\ref{tab:standard_variate} に示した対数標準化で評価した場合とを分けて計算した. 
+これにより, 分布そのものの適合度と, 標準化の形に由来する見かけの有利性とを分離して調べることとした.

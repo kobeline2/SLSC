@@ -1,13 +1,13 @@
-function outPath = make_criterion_compare_figure(summaryPath, outPath)
-%MAKE_CRITERION_COMPARE_FIGURE Make Figure 2 for the JSCE paper.
+function outPath = plot_criterion_compare(summaryPath, outPath)
+%PLOT_CRITERION_COMPARE Make the JSCE criterion comparison figure.
 %
 % This file is intentionally self-contained.
 % Edit only the block near the top, then run:
-%   make_criterion_compare_figure()
-%   make_criterion_compare_figure("/path/to/results_summary.mat")
+%   plot_criterion_compare()
+%   plot_criterion_compare("/path/to/criterion_compare_summary.mat")
 
 if nargin < 1 || strlength(string(summaryPath)) == 0
-    summaryPath = fullfile(localFigureDir(), "results_summary_short.mat");
+    summaryPath = fullfile(localOutDir(), "criterion_compare_summary.mat");
 end
 if nargin < 2 || strlength(string(outPath)) == 0
     outPath = fullfile(localFigureDir(), "criterion_compare.pdf");
@@ -15,7 +15,6 @@ end
 
 S = load(summaryPath, "summary");
 summary = S.summary;
-summary.labels = localLabels(summary.models);
 
 % ----- Edit here -------------------------------------------------------
 figurePosition = [80 80 1240 860];
@@ -24,10 +23,10 @@ tileCols = 3;
 tileSpacing = "compact";
 tilePadding = "compact";
 
-criterionFields = ["slsc_x", "slsc", "aic"];
-criterionLabels = ["X-space SLSC", "S-space SLSC", "AIC"];
-criterionColors = [0.10 0.25 0.60; 0.82 0.22 0.18; 0.15 0.55 0.22];
-criterionMarkers = ["o", "s", "^"];
+criterionFields = ["slsc_jk", "aic"];
+criterionLabels = ["SLSC+JK", "AIC"];
+criterionColors = [0.10 0.25 0.60; 0.82 0.22 0.18];
+criterionMarkers = ["o", "s"];
 
 lineSpec = "-";
 lineWidth = 1.8;
@@ -39,7 +38,7 @@ legendOrientation = "horizontal";
 % ----------------------------------------------------------------------
 
 fig = figure("Visible", "off", "Position", figurePosition);
-tl = tiledlayout(tileRows, tileCols, ...
+tiledlayout(tileRows, tileCols, ...
     "TileSpacing", tileSpacing, ...
     "Padding", tilePadding);
 
@@ -63,7 +62,11 @@ for gi = 1:numel(summary.models)
     end
 
     ylim(yLimits);
-    xlim([min(summary.Nlist), max(summary.Nlist)]);
+    if numel(summary.Nlist) == 1
+        xlim([summary.Nlist(1) - 0.5, summary.Nlist(1) + 0.5]);
+    else
+        xlim([min(summary.Nlist), max(summary.Nlist)]);
+    end
     xticks(summary.Nlist);
     title(summary.labels(gi));
     xlabel(xLabelText);
@@ -80,35 +83,22 @@ close(fig);
 fprintf("Wrote %s\n", outPath);
 end
 
-function labels = localLabels(models)
-models = string(models);
-labels = strings(size(models));
-for i = 1:numel(models)
-    switch models(i)
-        case "gumbel"
-            labels(i) = "Gumbel";
-        case "gev"
-            labels(i) = "GEV";
-        case "lgamma"
-            labels(i) = "LP3";
-        case "sqrtet"
-            labels(i) = "SqrtEt";
-        case "exponential"
-            labels(i) = "Exp";
-        case "lnormal"
-            labels(i) = "LN3";
-        otherwise
-            labels(i) = models(i);
-    end
+function figDir = localFigureDir()
+scriptPath = mfilename("fullpath");
+codeDir = fileparts(scriptPath);
+paperRoot = fileparts(codeDir);
+figDir = fullfile(paperRoot, "fig", "results");
+if ~isfolder(figDir)
+    mkdir(figDir);
 end
 end
 
-function figDir = localFigureDir()
+function outDir = localOutDir()
 scriptPath = mfilename("fullpath");
-scriptsDir = fileparts(scriptPath);
-jsceDir = fileparts(scriptsDir);
-figDir = fullfile(jsceDir, "fig", "results");
-if ~isfolder(figDir)
-    mkdir(figDir);
+codeDir = fileparts(scriptPath);
+paperRoot = fileparts(codeDir);
+outDir = fullfile(paperRoot, "out");
+if ~isfolder(outDir)
+    mkdir(outDir);
 end
 end
