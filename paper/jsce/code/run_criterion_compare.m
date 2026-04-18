@@ -518,7 +518,7 @@ for i = 1:numel(models)
         case "sqrtet"
             labels(i) = "SqrtEt";
         case "exponential"
-            labels(i) = "LN2";
+            labels(i) = "EXP";
         case "lnormal"
             labels(i) = "LN3";
         otherwise

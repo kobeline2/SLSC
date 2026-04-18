@@ -4,7 +4,8 @@ function tbl = show_criterion_project_status()
 opts = struct();
 
 % ----- Edit here -------------------------------------------------------
-opts.projectName = "paper_main";
+opts.projectName = "learn_smoke";
+% opts.projectName = "paper_main";
 % ----------------------------------------------------------------------
 
 tbl = criterion_project("status", opts);

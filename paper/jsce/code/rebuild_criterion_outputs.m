@@ -6,7 +6,8 @@ function out = rebuild_criterion_outputs()
 opts = struct();
 
 % ----- Edit here -------------------------------------------------------
-opts.projectName = "paper_main";
+opts.projectName = "learn_smoke";
+% opts.projectName = "paper_main";
 opts.publishToPaper = false;
 % ----------------------------------------------------------------------
 

@@ -182,10 +182,19 @@ cfg.seed = project.seed;
 cfg.slscProfile = project.slscProfile;
 cfg.slscTransforms = project.slscTransforms;
 
+if opts.logProgress
+    fprintf("[case] gen=%s N=%d stage=%s start\n", task.gen, task.N, opts.stage);
+end
+
 for r = 1:R
     substream = localSubstreamIndex(project, task.genIdx, task.NIdx, r);
     caseData.substream(r) = substream;
     obs = localGenerateObs(project, task, substream);
+
+    if opts.logProgress
+        fprintf("[case] gen=%s N=%d rep=%d/%d substream=%d\n", ...
+            task.gen, task.N, r, R, substream);
+    end
 
     slscRow = NaN(1, F);
     slscValidRow = false(1, F);
@@ -214,9 +223,19 @@ for r = 1:R
         end
 
         if needJackknife && fitStats.p0Valid
-            [wj, ok] = localJackknifeWidth(obs, fit, fitRes.theta, cfg, project);
+            logPrefix = sprintf("[jk] gen=%s N=%d rep=%d/%d fit=%s", ...
+                task.gen, task.N, r, R, fit);
+            if opts.logProgress
+                fprintf("%s start\n", logPrefix);
+            end
+
+            [wj, ok] = localJackknifeWidth(obs, fit, fitRes.theta, cfg, project, opts, logPrefix);
             wjRow(fi) = wj;
             jkValidRow(fi) = ok;
+
+            if opts.logProgress
+                fprintf("%s done ok=%d WJ=%.6g\n", logPrefix, ok, wj);
+            end
         end
     end
 
@@ -525,11 +544,12 @@ if isstruct(project.slscTransforms)
 end
 end
 
-function [wj, ok] = localJackknifeWidth(obs, fit, thetaInit, cfg, project)
+function [wj, ok] = localJackknifeWidth(obs, fit, thetaInit, cfg, project, opts, logPrefix)
 fitKey = char(string(fit));
 N = numel(obs);
 pj = NaN(N, 1);
 ok = true;
+logEvery = max(1, double(opts.jackknifeLogEvery));
 
 for j = 1:N
     obsMinus = obs;
@@ -548,6 +568,10 @@ for j = 1:N
     catch
         ok = false;
         break;
+    end
+
+    if opts.logProgress && (j == 1 || j == N || mod(j, logEvery) == 0)
+        fprintf("%s leave-one-out %d/%d\n", logPrefix, j, N);
     end
 end
 
@@ -838,6 +862,8 @@ defaults.useParallel = true;
 defaults.rebuildOutputs = true;
 defaults.publishToPaper = false;
 defaults.force = false;
+defaults.logProgress = false;
+defaults.jackknifeLogEvery = 50;
 end
 
 function opts = localFillDefaults(opts, defaults)
@@ -862,6 +888,8 @@ opts.useParallel = logical(opts.useParallel);
 opts.rebuildOutputs = logical(opts.rebuildOutputs);
 opts.publishToPaper = logical(opts.publishToPaper);
 opts.force = logical(opts.force);
+opts.logProgress = logical(opts.logProgress);
+opts.jackknifeLogEvery = double(opts.jackknifeLogEvery);
 end
 
 function stage = localCanonicalStage(stage)
@@ -886,7 +914,7 @@ for i = 1:numel(models)
         case "sqrtet"
             labels(i) = "SqrtEt";
         case "exponential"
-            labels(i) = "LN2";
+            labels(i) = "EXP";
         case "lnormal"
             labels(i) = "LN3";
         otherwise

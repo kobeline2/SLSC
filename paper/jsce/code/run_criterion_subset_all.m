@@ -5,6 +5,7 @@ function out = run_criterion_subset_all()
 % "What happens for these distributions and these N values?"
 
 opts = struct();
+opts.stage = "all";
 
 % ----- Edit here -------------------------------------------------------
 opts.projectName = "paper_main";
@@ -21,7 +22,6 @@ opts.Nlist = [50, 100, 150];
 
 opts.rep = 100;
 opts.Tref = 100;
-opts.stage = "all";
 opts.useParallel = true;
 opts.publishToPaper = false;
 % opts.force = true;
