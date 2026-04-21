@@ -846,7 +846,7 @@ end
 function defaults = localProjectDefaults()
 defaults = struct();
 defaults.projectName = "paper_main";
-defaults.projectModels = ["gumbel", "gev", "lgamma", "sqrtet", "exponential", "lnormal"];
+defaults.projectModels = ["gumbel", "gev", "lp3", "sqrtet", "exponential", "lnormal"];
 defaults.projectNlist = [50, 100, 150];
 defaults.genList = strings(0, 1);
 defaults.Nlist = [];
@@ -910,6 +910,8 @@ for i = 1:numel(models)
         case "gev"
             labels(i) = "GEV";
         case "lgamma"
+            labels(i) = "P3";
+        case "lp3"
             labels(i) = "LP3";
         case "sqrtet"
             labels(i) = "SqrtEt";

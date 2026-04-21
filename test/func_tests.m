@@ -13,6 +13,8 @@ model = 'sqrtet';
 theta = struct('a',190.2683,'b',0.5685);
 model = 'lgamma';
 theta = struct('a',26.7121,'b',2.4696,'c',50.1637);
+model = 'lp3';
+theta = struct('a',0.35,'b',2.5,'c',3.45);
 
 %% rand_
 N = 10000;
@@ -47,6 +49,7 @@ model = 'lnormal';     theta0 = struct('c',30, 'mu',5 , 'sigma',1);
 model = 'exponential'; theta0 = struct('c',50,'mu',50);
 model = 'sqrtet';      theta0 = struct('a',120,'b',0.5);
 model = 'lgamma';      theta0 = struct('a',20,'b',2,'c',50);
+model = 'lp3';         theta0 = struct('a',0.3,'b',2,'c',3.5);
 % fitした結果のPDFをヒストグラムに重ねる
 fitRes = simstudy.estimators.MLE(model, obs, theta0);
 x = 0:1:1000; y = simstudy.distributions.pdf(model, x, fitRes.theta);

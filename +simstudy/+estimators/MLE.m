@@ -43,6 +43,8 @@ case "exponential"
 %----------------------------------------------------------------------
 case "lgamma" % special treatment to satisfy theta.c < min(obs)
     fitRes = MLE_lgamma(obs, theta0);
+case "lp3" % log-Pearson type III: fit Pearson III in log space
+    fitRes = MLE_lp3(obs, theta0);
 otherwise
     %―― ① pack / unpack と p0 を取得 ―――――――――――――――――――
     [pack, unpack, p0] = simstudy.util.makeTransform(model, theta0);
@@ -67,6 +69,8 @@ function model = localCanonicalModel(model)
 model = lower(string(model));
 if model == "norm"
     model = "normal";
+elseif any(model == ["logpearson3", "log_pearson3", "logpearsoniii", "log_pearson_iii"])
+    model = "lp3";
 end
 end
 % ---
@@ -124,4 +128,21 @@ fitRes   = struct( ...
     'loglik'  ,-fval, ...
     'exitflag', exitflag, ...
     'output'  , out );
+end
+
+function fitRes = MLE_lp3(obs, initStruct)
+% Fit log-Pearson type III by applying Pearson III MLE to log(obs).
+
+if any(obs <= 0)
+    error("MLE_lp3:InvalidData", "LP3 requires positive observations.");
+end
+
+y = log(obs);
+fitResY = MLE_lgamma(y, initStruct);
+
+fitRes = fitResY;
+fitRes.model = "lp3";
+% The Jacobian d log(x) / dx contributes -sum(log(x)) to the x-space
+% likelihood. It is constant for optimisation, but needed for AIC.
+fitRes.loglik = fitResY.loglik - sum(log(obs));
 end

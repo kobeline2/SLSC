@@ -20,7 +20,7 @@ function plotSLSCpassRateVar(src, th, opts)
 %
 %     3) Folder mode (no res in memory) + custom options
 %        >> plotSLSCPASSRATEVAR("results", th, ...
-%              'genList', ["gev","gumbel","lgamma"], ...
+%              'genList', ["gev","gumbel","lp3"], ...
 %              'Nlist',   [50 100])
 %
 %   ── INPUTS ──────────────────────────────────────────────────────────
@@ -46,11 +46,11 @@ function plotSLSCpassRateVar(src, th, opts)
 %                'genList', ["gev","gumbel"]);
 %
 %   ── DEFAULT MODEL ORDER ─────────────────────────────────────────────
-%     ["exponential","gev","gumbel","lgamma","lnormal","sqrtet"]
+%     ["exponential","gev","gumbel","lp3","lnormal","sqrtet"]
 %
 %   ── THRESHOLD TABLE EXAMPLE ─────────────────────────────────────────
 %       >> th = table([50;50;50;100;100;100], ...
-%                     ["gev";"gumbel";"lgamma";"gev";"gumbel";"lgamma"], ...
+%                     ["gev";"gumbel";"lp3";"gev";"gumbel";"lp3"], ...
 %                     0.04*[1.2;1.1;1.0;0.9;0.8;0.7], ...
 %                     'VariableNames',{'N','fit','value'});
 %
@@ -67,7 +67,7 @@ function plotSLSCpassRateVar(src, th, opts)
 arguments
     src
     th table = table()                         % τ = 0.04 if empty
-    opts.genList string = ["exponential","gev","gumbel","lgamma","lnormal","sqrtet"]
+    opts.genList string = ["exponential","gev","gumbel","lp3","lnormal","sqrtet"]
     opts.fitList string = string.empty         % ← いったん空に
     opts.Nlist   double = [50 100 150]
     opts.metric  string = "slsc"

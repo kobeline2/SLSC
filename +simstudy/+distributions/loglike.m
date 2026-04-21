@@ -20,6 +20,8 @@ arguments
     theta struct = struct()           % optional (default empty struct)
 end
 
+model = lower(string(model));
+
 % --- build fully-qualified subfunction name -------------
 funcName = "simstudy.distributions.loglike_" + model;
 

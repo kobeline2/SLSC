@@ -1,5 +1,5 @@
 % Run consistency checks for one distribution and save outputs locally.
-% distList = ["gumbel", "normal", "exponential", "gev", "sqrtet", "lnormal", "lgamma"]
+% distList = ["gumbel", "normal", "exponential", "gev", "sqrtet", "lnormal", "lgamma", "lp3"]
 paths = slscLocalPaths(true);
 
 for model = distList

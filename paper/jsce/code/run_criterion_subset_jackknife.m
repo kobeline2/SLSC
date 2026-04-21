@@ -24,7 +24,7 @@ opts.useParallel = true;
 % opts.useParallel = false;     % easier-to-read logs
 
 % opts.projectName = "paper_main";
-% opts.projectModels = ["gumbel", "gev", "lgamma", "sqrtet", "exponential", "lnormal"];
+% opts.projectModels = ["gumbel", "gev", "lp3", "sqrtet", "exponential", "lnormal"];
 % opts.projectNlist = [50, 100, 150, 200, 250];
 % 
 % % Example: only case B with N = N2, N3

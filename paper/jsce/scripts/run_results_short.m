@@ -64,7 +64,7 @@ if nargin < 1
 end
 
 defaults = struct();
-defaults.models = ["gumbel", "gev", "lgamma", "sqrtet", "exponential", "lnormal"];
+defaults.models = ["gumbel", "gev", "lp3", "sqrtet", "exponential", "lnormal"];
 defaults.Nlist = [50, 100, 150];
 defaults.rep = 100;
 defaults.metrics = {'SLSC', 'SLSC_X', 'AIC'};
@@ -184,6 +184,8 @@ for i = 1:numel(models)
         case "gev"
             labels(i) = "GEV";
         case "lgamma"
+            labels(i) = "P3";
+        case "lp3"
             labels(i) = "LP3";
         case "sqrtet"
             labels(i) = "SqrtEt";

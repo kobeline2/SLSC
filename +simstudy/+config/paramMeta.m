@@ -20,6 +20,11 @@ switch model
             struct('name','a','domain','pos');  
             struct('name','b','domain','pos') ;
             struct('name','c','domain','real')];
+    case "lp3"
+        meta = [ ...
+            struct('name','a','domain','pos');
+            struct('name','b','domain','pos');
+            struct('name','c','domain','real')];
     case "sqrtet"
         meta = [ ...
             struct('name','a','domain','pos');   

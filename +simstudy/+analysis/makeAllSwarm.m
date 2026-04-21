@@ -21,7 +21,7 @@ arguments
     metric   string
     Nlist    double  {mustBeVector}
     outDir   string
-    opts.genList   string = ["exponential","gev","gumbel","lgamma","lnormal","sqrtet"]
+    opts.genList   string = ["exponential","gev","gumbel","lp3","lnormal","sqrtet"]
     opts.fitList   string = opts.genList
     opts.Quantiles double = [0.1 0.5 0.9]
     opts.Overwrite logical = false

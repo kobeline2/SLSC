@@ -9,11 +9,11 @@ opts.stage = "all";
 
 % ----- Edit here -------------------------------------------------------
 opts.projectName = "paper_main";
-opts.projectModels = ["gumbel", "gev", "lgamma", "sqrtet", "exponential", "lnormal"];
+opts.projectModels = ["gumbel", "gev", "lp3", "sqrtet", "exponential", "lnormal"];
 opts.projectNlist = [50, 100, 150, 200, 250];
 
 % Cartesian product:
-opts.genList = ["gumbel", "gev", "lgamma"];
+opts.genList = ["gumbel", "gev", "lp3"];
 opts.Nlist = [50, 100, 150];
 
 % Or use explicit case pairs instead:

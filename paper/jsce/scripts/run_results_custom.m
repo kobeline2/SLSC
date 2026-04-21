@@ -12,7 +12,7 @@ end
 
 % ----- Edit here -------------------------------------------------------
 defaultOpts = struct();
-defaultOpts.models = ["gumbel", "gev", "lgamma", "sqrtet", "exponential", "lnormal"];
+defaultOpts.models = ["gumbel", "gev", "lp3", "sqrtet", "exponential", "lnormal"];
 defaultOpts.Nlist = [50, 100, 150];
 defaultOpts.rep = 100;
 defaultOpts.metrics = {'SLSC', 'SLSC_X', 'AIC'};
@@ -265,6 +265,8 @@ for i = 1:numel(models)
         case "gev"
             labels(i) = "GEV";
         case "lgamma"
+            labels(i) = "P3";
+        case "lp3"
             labels(i) = "LP3";
         case "sqrtet"
             labels(i) = "SqrtEt";

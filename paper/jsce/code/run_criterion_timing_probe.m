@@ -12,9 +12,9 @@ function out = run_criterion_timing_probe()
 % ----- Full run you want to estimate ----------------------------------
 fullOpts = struct();
 fullOpts.projectName = "hydro_main";
-fullOpts.projectModels = ["gumbel", "gev", "lgamma", "sqrtet", "exponential", "lnormal"];
+fullOpts.projectModels = ["gumbel", "gev", "lp3", "sqrtet", "exponential", "lnormal"];
 fullOpts.projectNlist = 25:150;
-fullOpts.genList = ["gumbel", "gev", "lgamma", "sqrtet", "exponential", "lnormal"];
+fullOpts.genList = ["gumbel", "gev", "lp3", "sqrtet", "exponential", "lnormal"];
 fullOpts.Nlist = 25:150;
 fullOpts.rep = 1000;
 fullOpts.Tref = 50;

@@ -45,6 +45,12 @@
 
 ## 2. まず理解しておくべき考え方
 
+### 分布名
+
+論文用の 6 分布では, 対数ピアソン III 型分布は `lp3` と指定します.
+既存の `lgamma` は Gamma/Pearson III 型分布を表す古い実装名であり, LP3 とは別物です.
+表示名では `lp3` が `LP3`, `lgamma` が `P3` として扱われます.
+
 このコードは, `projectName` ごとに 1 つの「計算プロジェクト」を作って,
 その中に `(gen, N)` ケースごとの結果を少しずつ保存していく方式です.
 
@@ -315,10 +321,10 @@ CSV, TeX 表, PDF 図を更新します.
 
 ```matlab
 opts.projectName = "paper_main";
-opts.projectModels = ["gumbel", "gev", "lgamma", "sqrtet", "exponential", "lnormal"];
+opts.projectModels = ["gumbel", "gev", "lp3", "sqrtet", "exponential", "lnormal"];
 opts.projectNlist = [50, 100, 150, 200, 250];
 
-opts.genList = ["gumbel", "gev", "lgamma"];
+opts.genList = ["gumbel", "gev", "lp3"];
 opts.Nlist = [50, 100, 150];
 
 opts.rep = 100;
@@ -329,7 +335,7 @@ opts.stage = "all";
 
 - `gumbel × 50,100,150`
 - `gev × 50,100,150`
-- `lgamma × 50,100,150`
+- `lp3 × 50,100,150`
 
 を全部回します.
 
@@ -425,7 +431,7 @@ out = rebuild_criterion_outputs();
 通常は
 
 ```matlab
-["gumbel", "gev", "lgamma", "sqrtet", "exponential", "lnormal"]
+["gumbel", "gev", "lp3", "sqrtet", "exponential", "lnormal"]
 ```
 
 を使います.

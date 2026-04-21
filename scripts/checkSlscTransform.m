@@ -8,7 +8,7 @@ paths = slscLocalPaths(true);
 cfg = simstudy.config.base();
 
 %% settings
-model = "gev";      % "gev", "lgamma", or "sqrtet"
+model = "gev";      % "gev", "lgamma", "lp3", or "sqrtet"
 profile = string(cfg.slscProfile);  % "japan_admin" or "eva_reduced"
 variant = "";      % optional direct override for one model
 saveOutputs = true;
@@ -125,6 +125,10 @@ switch model
                     "Reference transform is not defined for sqrt-ET variant %s.", variant);
         end
     case "lgamma"
+        Fx = simstudy.distributions.cdf(model, x, theta);
+        uRef = gaminv(Fx, theta.b, 1);
+        label = "gaminv(F(x), b, 1)";
+    case "lp3"
         Fx = simstudy.distributions.cdf(model, x, theta);
         uRef = gaminv(Fx, theta.b, 1);
         label = "gaminv(F(x), b, 1)";

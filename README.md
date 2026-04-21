@@ -52,8 +52,8 @@ paths = init();
 
 % Configure and run
 cfg = simstudy.config.base();
-cfg.genList = ["gumbel", "gev", "lnormal", "lgamma", "sqrtet"];
-cfg.fitList = ["gumbel", "gev", "lnormal", "lgamma", "sqrtet"];
+cfg.genList = ["gumbel", "gev", "lp3", "sqrtet", "exponential", "lnormal"];
+cfg.fitList = ["gumbel", "gev", "lp3", "sqrtet", "exponential", "lnormal"];
 cfg.Nlist   = [50, 100, 150];
 cfg.rep     = 10000;
 

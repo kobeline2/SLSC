@@ -132,6 +132,8 @@ for i = 1:numel(models)
         case "gev"
             labels(i) = "GEV";
         case "lgamma"
+            labels(i) = "P3";
+        case "lp3"
             labels(i) = "LP3";
         case "sqrtet"
             labels(i) = "SqrtEt";

@@ -49,6 +49,9 @@ switch model
     case "lgamma"
         f = @(x) (x - theta.c) ./ theta.a;
         label = "(x - c) / a";
+    case "lp3"
+        f = @(x) (log(x) - theta.c) ./ theta.a;
+        label = "(log(x) - c) / a";
     case "sqrtet"
         switch variant
             case "bx"
@@ -119,6 +122,8 @@ if strlength(variant) == 0
             variant = "log_shift_scale";
         case "lgamma"
             variant = "shift_scale";
+        case "lp3"
+            variant = "log_shift_scale";
         otherwise
             error("simstudy:SLSC:UnknownModel", ...
                 "No SLSC transform is defined for model %s.", model);
@@ -157,6 +162,8 @@ switch model
         variant = "log_shift_scale";
     case "lgamma"
         variant = "shift_scale";
+    case "lp3"
+        variant = "log_shift_scale";
     otherwise
         error("simstudy:SLSC:UnknownModel", ...
             "No SLSC transform is defined for model %s.", model);

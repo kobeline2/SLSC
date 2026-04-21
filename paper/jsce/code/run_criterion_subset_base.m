@@ -19,7 +19,7 @@ opts.Tref = 100;
 opts.useParallel = true;
 opts.publishToPaper = false;
 % opts.projectName = "paper_main";
-% opts.projectModels = ["gumbel", "gev", "lgamma", "sqrtet", "exponential", "lnormal"];
+% opts.projectModels = ["gumbel", "gev", "lp3", "sqrtet", "exponential", "lnormal"];
 % opts.projectNlist = [50, 100, 150, 200, 250];
 % 
 % opts.genList = ["gumbel", "gev", "lnormal"];
