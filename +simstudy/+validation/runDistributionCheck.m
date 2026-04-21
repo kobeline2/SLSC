@@ -38,12 +38,13 @@ report.checks.pdfNonnegative = localTry(@() localPdfNonnegative(model, theta, xq
 report.checks.loglikeFinite = localTry(@() localLoglikeFinite(model, theta, obs));
 report.checks.mleSelfFit = localTry(@() localMLE(model, theta0, obs));
 
+if strlength(opts.SaveDir) > 0 && ~isfolder(opts.SaveDir)
+    mkdir(opts.SaveDir);
+end
+
 if opts.MakeFigure
     fig = localMakeFigure(model, theta, obs, xq, u, report);
     if strlength(opts.SaveDir) > 0
-        if ~isfolder(opts.SaveDir)
-            mkdir(opts.SaveDir);
-        end
         figPath = fullfile(opts.SaveDir, model + "_diagnostic.png");
         exportgraphics(fig, figPath, "Resolution", 200);
         report.files.figure = string(figPath);

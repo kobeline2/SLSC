@@ -1,0 +1,127 @@
+% This appendix is for coauthor checking. Toggle it in main.tex.
+\section{計算で用いた分布とパラメータ}
+\label{app:distribution_defs}
+
+本付録では, 数値計算で用いた分布のパラメータ化, 確率密度関数, および主要な計算条件をまとめる. 
+ここで, \(\Gamma(\cdot)\) はガンマ関数を表す.
+
+\subsection{確率密度関数}
+
+\noindent\textbf{Gumbel 分布.}
+\(\alpha\) を位置母数, \(\beta>0\) を尺度母数とし, \(z=(x-\alpha)/\beta\) とおく. 
+このとき
+\[
+f(x;\alpha,\beta)
+=
+\frac{1}{\beta}
+\exp\{-z-\exp(-z)\},
+\quad -\infty<x<\infty .
+\]
+
+\noindent\textbf{一般化極値分布 (GEV).}
+\(\mu\) を位置母数, \(\sigma>0\) を尺度母数, \(k\) を形状母数とし,
+\[
+t=1+k\frac{x-\mu}{\sigma}
+\]
+とおく. 
+\(t>0\) の範囲で, \(k\ne0\) のとき
+\[
+f(x;k,\sigma,\mu)
+=
+\frac{1}{\sigma}
+t^{-1/k-1}
+\exp\{-t^{-1/k}\}
+\]
+である. 
+\(k=0\) は Gumbel 分布への極限として扱った.
+
+\noindent\textbf{対数ピアソンIII型分布 (LP3).}
+\[
+\log X = c + aY,\quad Y\sim \mathrm{Gamma}(b,1)
+\]
+とし, \(a>0\), \(b>0\) とする. 
+\(z=(\log x-c)/a\) とおくと, \(x>\exp(c)\) に対して
+\[
+f(x;a,b,c)
+=
+\frac{z^{b-1}\exp(-z)}
+{a x \Gamma(b)}
+\]
+である.
+
+\noindent\textbf{平方根指数型最大値分布 (SqrtEt).}
+\(a>0\), \(b>0\) とする. 
+\(x\ge0\) に対して
+\[
+f(x;a,b)
+=
+\frac{ab}{2}
+\exp\left[
+-\sqrt{bx}
+-a\left(1+\sqrt{bx}\right)\exp\{-\sqrt{bx}\}
+\right]
+\]
+である.
+
+\noindent\textbf{平行移動指数分布 (Exp).}
+\(c\) を位置母数, \(\mu>0\) を尺度母数とする. 
+\(x\ge c\) に対して
+\[
+f(x;c,\mu)
+=
+\frac{1}{\mu}
+\exp\left\{-\frac{x-c}{\mu}\right\}
+\]
+であり, \(x<c\) では \(f(x)=0\) とする.
+
+\noindent\textbf{3母数対数正規分布 (LN3).}
+\(c\) を位置母数, \(\mu_L\) と \(\sigma_L>0\) を対数空間での位置母数および尺度母数とする. 
+\[
+y=\frac{\log(x-c)-\mu_L}{\sigma_L}
+\]
+とおくと, \(x>c\) に対して
+\[
+f(x;c,\mu_L,\sigma_L)
+=
+\frac{1}{(x-c)\sigma_L\sqrt{2\pi}}
+\exp\left(-\frac{y^2}{2}\right)
+\]
+である.
+
+\subsection{真の分布として用いたパラメータ}
+
+\begin{center}
+\small
+\setlength{\tabcolsep}{5pt}
+\begin{tabular}{lll}
+\hline
+分布 & パラメータ & 値 \\
+\hline
+Gumbel & \(\alpha,\beta\) & \(97.7438,\ 30.7042\) \\
+GEV & \(k,\sigma,\mu\) & \(0.0910,\ 29.5452,\ 96.2345\) \\
+LP3 & \(a,b,c\) & \(0.0683,\ 24.3314,\ 3.0352\) \\
+SqrtEt & \(a,b\) & \(190.2683,\ 0.5685\) \\
+Exp & \(c,\mu\) & \(54.5000,\ 61.6320\) \\
+LN3 & \(c,\mu_L,\sigma_L\) & \(31.3965,\ 4.3254,\ 0.4805\) \\
+\hline
+\end{tabular}
+\end{center}
+
+\subsection{主な計算条件}
+
+\begin{center}
+\small
+\setlength{\tabcolsep}{5pt}
+\begin{tabular}{ll}
+\hline
+項目 & 設定 \\
+\hline
+標本サイズ & \(N=50,100,150\) \\
+反復数 & \(100\) \\
+乱数シード & \(42\) \\
+プロッティングポジション & Cunnane 式 \\
+SLSC 閾値 & \(0.04\) \\
+ジャックナイフ幅の参照再現期間 & \(T_{\mathrm{ref}}=100\) \\
+\hline
+\end{tabular}
+\end{center}

@@ -30,6 +30,18 @@
 \newcommand{\SLSC}{\mathrm{SLSC}}
 \newcommand{\AIC}{\mathrm{AIC}}
 
+% 共著者確認用の付録を出力する場合は true, 投稿時に外す場合は false にする.
+\newif\ifshowappendix
+\showappendixtrue
+% \showappendixfalse
+\AtEndDocument{%
+  \ifshowappendix
+    \clearpage
+    \appendix
+    \input{sections/appendix_distribution_defs}
+  \fi
+}
+
 \begin{document}
 
 \jtitle{SLSC に基づく水文頻度解析の適合度評価に関する統計的再検討}
