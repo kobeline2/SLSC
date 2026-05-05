@@ -48,7 +48,7 @@ end
 
 models = string(project.models);
 Nlist = double(project.Nlist);
-selectionShare = localSelectionShareAIC(project, rowGens, focusFits, models, Nlist);
+selectionShare = localSelectionShareAIC(projectRoot, project, rowGens, focusFits, models, Nlist);
 
 fig = figure("Visible", "off", "Position", figurePosition);
 t = tiledlayout(tileRows, tileCols, ...
@@ -96,16 +96,17 @@ close(fig);
 fprintf("Wrote %s\n", outPath);
 end
 
-function share = localSelectionShareAIC(project, rowGens, focusFits, models, Nlist)
+function share = localSelectionShareAIC(projectRoot, project, rowGens, focusFits, models, Nlist)
 G = numel(rowGens);
 S = numel(focusFits) + 1; % + Others
 K = numel(Nlist);
 share = NaN(G, S, K);
+casesDir = fullfile(projectRoot, "cases");
 
 for gi = 1:G
     gen = rowGens(gi);
     for ni = 1:K
-        casePath = fullfile(project.casesDir, sprintf("N%d_%s.mat", Nlist(ni), char(gen)));
+        casePath = fullfile(casesDir, sprintf("N%d_%s.mat", Nlist(ni), char(gen)));
         if ~isfile(casePath)
             continue;
         end

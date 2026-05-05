@@ -285,7 +285,7 @@ configPath = fullfile(projectRoot, "project.mat");
 
 if isfile(configPath)
     loaded = load(configPath, "project");
-    project = loaded.project;
+    project = localRelocateProjectPaths(loaded.project, projectRoot);
     localValidateProject(project, opts);
     return;
 end
@@ -318,7 +318,14 @@ if ~isfile(configPath)
         "Project %s does not exist.", projectName);
 end
 loaded = load(configPath, "project");
-project = loaded.project;
+projectRoot = fileparts(configPath);
+project = localRelocateProjectPaths(loaded.project, projectRoot);
+end
+
+function project = localRelocateProjectPaths(project, projectRoot)
+% Keep old project files portable across machines with different home paths.
+project.rootDir = string(projectRoot);
+project.casesDir = string(fullfile(projectRoot, "cases"));
 end
 
 function localValidateProject(project, opts)
