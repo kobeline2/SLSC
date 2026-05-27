@@ -1,142 +1,84 @@
-以下では, まず $N=50,100,150$ の3水準について, 各条件100反復の短い試算結果を用いて主要な傾向を確認する.
+\subsection{標本サイズ依存性}
+\figref{fig:slsc_n_scaling}に, 各真の分布に対する SLSC の平均値と標準偏差を示す.
+真の分布と当てはめ分布が一致する曲線は, いずれの真の分布でも標本サイズの増加に伴って低下した.
+\(N=25\) から \(N=150\) への変化で見ると, 自己当てはめ時の SLSC はおおむね半分程度まで低下した.
+独立同分布標本に基づく平均的な標本変動は, 中心極限定理に対応する標準誤差のスケールとして \(N^{-1/2}\) のオーダーで減少することが期待される.
+ただし, SLSC は順序統計量に基づく距離を分位幅で正規化した量であり, 母数推定の影響も含まれるため, 図中の \(N^{-1/2}\) は厳密な理論線ではなく, 減少率を読むための参考線として用いる.
 
-\subsection{標本数依存性}
-図\ref{fig:slsc_n_scaling}に, 各 sampler に対する X 空間 SLSC の平均値と標準偏差を示す. 
-真の分布と当てはめ分布が一致する曲線は, いずれも概ね $N^{-1/2}$ の基準線に沿って減少した. 
-一方, 真の分布と当てはめ分布が一致しない曲線では, 標本数を増やしても低下は限定的であり, 正しいモデルに比べて高い水準にとどまった. 
-すなわち, 正則な場合には標本誤差の減少に応じて SLSC が縮小するのに対し, 真の分布と当てはめ分布が一致しないとモデルずれに由来する系統誤差が残ることが, 6分布比較でも確認された.
+一方, 真の分布と当てはめ分布が一致しない場合の挙動は一様ではない.
+分布形状の差が大きい組合せでは, 標本サイズを増やしても SLSC は高い水準にとどまる一方, LP3 や LN3 は複数の真の分布に対して小さい SLSC を与える場合があった.
 
-とくに, Gumbel, GEV, LP3, Exp, LN3 では, 真の分布に対応する曲線が最も明瞭に $N^{-1/2}$ に近い傾きを示した. 
-SqrtEt でも同様の減少傾向は認められるが, 他の候補分布との差は必ずしも大きくない. 
-したがって, SLSC を固定閾値で解釈するのではなく, 少なくとも標本数と候補分布群を踏まえて相対的に読む必要がある.
-
-\begin{figure*}[t]
+\begin{figure}[t]
 \centering
-\includegraphics[width=\textwidth]{fig/results/slsc_n_scaling_panels.pdf}
-\caption{各 sampler に対する X 空間 SLSC の標本数依存性（平均$\pm$標準偏差）．破線は $N^{-1/2}$ の基準線を表す．}
+\includegraphics[width=\columnwidth]{fig/results/slsc_n_scaling_panels.pdf}
+\caption{各真の分布に対する SLSC の標本サイズ依存性（平均$\pm$標準偏差）．破線は減少率の目安として示した $N^{-1/2}$ の参考線である．}
 \label{fig:slsc_n_scaling}
-\end{figure*}
+\end{figure}
 
-\subsection{6分布に拡張した比較結果}
-次に, 真の分布と当てはめ分布の組合せを6分布全体に拡張し, SLSC の平均値, 真の分布で正規化した相対値, および選択頻度を比較した. 
-その結果, 既往研究で指摘された SLSC の性質, すなわち標本数依存性とモデル選択の不安定性は, より広い分布群に対しても概ね維持された.
+\subsection{SLSC の大きさの比較}
+次に, 真の分布と当てはめ分布の組合せを6分布全体に拡張し, SLSC の値そのものを比較する.
+\tabref{tab:absolute_slsc}には, 真の分布と当てはめ分布の各組合せについて, \(N=100\) における平均 SLSC を示す.
+LP3 は\tabref{tab:standard_variate}に示した \(S\) 空間評価として扱い, LN3 については, \(X\) 空間評価と, 対数標準化を用いた \(S\) 空間評価とを分けて示す.
+また, 同一行において, 真の分布を当てはめた場合の SLSC より小さい値を太字で示す.
 
-ここで強調すべきは, 本稿が理論的に示した内容と, 数値実験によって確認した内容とは区別されるべきことである. 
-本稿で理論的に示したのは, SLSC が線形変換に対してのみ不変であり, 非線形標準化を施した S 空間の SLSC は, 一般に X 空間の SLSC と一致しない, という点である. 
-すなわち, 非線形変換は SLSC の距離尺度そのものを変形し, 分布比較指標としての公平性を損なう. 
-この点は, 変換の平均値の定理に基づく整理から, 数学的に示すことができる.
-
-一方, 非線形標準化された SLSC が, 具体的にどの方向へずれるか, すなわち X 空間の SLSC より小さくなりやすいかどうかは, 一般には自明ではない. 
-その方向は, 誤差の位置分布と標準化関数の形との組合せに依存し, 数学的に常に一方向へずれることを主張することはできない. 
-したがって, この点は理論だけでなく, 実際の水文量の大きさを想定した数値実験によって確認する必要がある.
-
-本稿の数値実験では, とくに真の分布がグンベル分布や一般化極値分布である場合にも, 3母数対数正規分布を対数標準化した S 空間の SLSC, すなわち LN3(S), が, 真の分布に対する X 空間 SLSC より小さい値を与える場合が多かった. 
-この傾向は, 雨量のように正の値をとり, かつ上側の順序統計量が大きな値をとるデータでは, 3母数対数正規分布の標準化
-\[
-s=\frac{\log(x-c)-\mu_L}{\sigma_L}
-\]
-に対して
-\[
-f'(x)=\frac{1}{\sigma_L(x-c)}
-\]
-であることから, 大きい $x$ に対応する誤差ほど小さい重みが掛かりやすいことと整合的である. 
-すなわち, 雨量規模の範囲では, 上側の順序統計量に由来する誤差が圧縮され, LN3(S) の SLSC が小さく出やすい条件が生じやすい. 
-ただし, これは非線形標準化が常に SLSC を引き下げることを意味するものではなく, あくまで本稿で扱った数値条件の下で確認された傾向である.
-
-他方, 3母数対数正規分布を X 空間で評価した場合には, このような過度の優位性はかなり緩和された. 
-このことは, 問題の少なくとも一部が分布そのものにあるのではなく, 非線形標準化によって導入される距離尺度の変形に由来していることを示している.
-
-\begin{table}[tb]
-\caption{真の分布で正規化した相対 SLSC の比較（$N=50,100,150$ の平均）}
-\label{tab:relative_slsc}
-\centering
-\scriptsize
-\setlength{\tabcolsep}{3pt}
-\begin{tabular}{lrrrrrrr}
-\hline
-sampler & Gumbel & GEV & LP3 & SqrtEt & Exp & LN3(X) & LN3(S) \\
-\hline
-Gumbel & 1.000 & \textbf{0.803} & \textbf{0.914} & 1.350 & 3.111 & \textbf{0.878} & \textbf{0.754} \\
-GEV    & 1.648 & 1.000 & 1.334 & 1.272 & 2.742 & 1.085 & \textbf{0.809} \\
-LP3    & 1.302 & 1.120 & 1.000 & 1.228 & 2.616 & 1.059 & \textbf{0.801} \\
-SqrtEt & 1.418 & \textbf{0.783} & 1.054 & 1.000 & 1.936 & \textbf{0.837} & \textbf{0.613} \\
-Exp    & 2.247 & 2.054 & 1.209 & 1.578 & 1.000 & 1.494 & \textbf{0.800} \\
-LN3    & 1.630 & \textbf{0.988} & 1.195 & 1.220 & 2.502 & 1.000 & \textbf{0.761} \\
-\hline
-\end{tabular}
-\par\footnotesize
-太字は真の分布より小さい相対値を表す．LN3(X) は X 空間評価，LN3(S) は対数標準化した S 空間評価である．
-\end{table}
-
-\begin{table}[tb]
-\caption{sampler ごとの真モデル選択率（$N=50,100,150$ の平均）}
-\label{tab:true_model_rate}
-\centering
-\small
-\begin{tabular}{lrrr}
-\hline
-sampler & X 空間 SLSC & S 空間 SLSC & AIC \\
-\hline
-Gumbel & 0.177 & 0.127 & 0.637 \\
-GEV    & 0.340 & 0.133 & 0.023 \\
-LP3    & 0.440 & 0.113 & 0.577 \\
-SqrtEt & 0.163 & 0.070 & 0.550 \\
-Exp    & 0.497 & 0.293 & 0.140 \\
-LN3    & 0.213 & 0.740 & 0.050 \\
-\hline
-\end{tabular}
-\par\footnotesize
-AIC の LN3 行は参考値として扱う．
-\end{table}
-
-\subsection{SLSC+ジャックナイフ法および AIC との比較}
-次に, モデル判別の観点から, X 空間 SLSC, S 空間 SLSC, SLSC+ジャックナイフ法, および AIC を比較した. ここで SLSC+ジャックナイフ法は, 式\eqref{eq:slsc_threshold} を満たす候補の中でジャックナイフ幅 $W_J$ が最小となる分布を採択する実務的な手順である. AIC は参照指標として併記した.
-
-表\ref{tab:true_select_rate}に, sampler ごとの真モデル選択率を示す. ここで真モデル選択率とは, 各反復において最終的に採択された分布が真の分布と一致した割合である.
-\IfFileExists{out/criterion_selection_table.tex}{%
-\input{out/criterion_selection_table}
+\IfFileExists{out/absolute_slsc_table.tex}{%
+\input{out/absolute_slsc_table}
 }{%
 \begin{table}[tb]
-\caption{sampler ごとの真モデル選択率}
-\label{tab:true_select_rate}
+\caption{各組合せでの平均 SLSC 値（$N=100$）}
+\label{tab:absolute_slsc}
 \centering
 \footnotesize
-\texttt{paper/jsce/code/run\_criterion\_compare.m} により生成予定
+\texttt{out/absolute\_slsc\_table.tex} により生成予定
 \end{table}
 }
 
-また, 図\ref{fig:criterion_compare}に, sampler ごとの真モデル選択率の $N$ 依存性を示す. 
-% TODO: 実結果に応じて, 以下の文を埋める
-本稿の計算では, [ここに主要な傾向を記述: 例えば「X 空間 SLSC は最小 SLSC よりも安定であり, S 空間 SLSC は 3母数対数正規分布を過大に選びやすい. SLSC+ジャックナイフ法は, 最小 SLSC よりは偏りが弱いが, なお [分布名] を選びやすい傾向を示した. AIC は少なくとも LN3(S) のような一方向の偏りを示さなかった.」].
+\tabref{tab:absolute_slsc}を見ると, 真の分布を当てはめた場合の SLSC は概して低いが, 常に同一行の最小値になるわけではない.
+複数の行で LP3 や LN3(S) が真の分布を当てはめた場合より小さい値を与え, とくに LN3(S) は真の分布が LN3 でない場合にも小さい値を与えやすい.
+一方, LN3(X) ではこの傾向が緩和され, 多くの真の分布で LN3(S) より大きい値となった.
 
-\IfFileExists{out/criterion_selection_table.tex}{%
-\IfFileExists{fig/results/criterion_compare.pdf}{%
-\begin{figure*}[t]
+\subsection{SLSC+ジャックナイフ法および AIC による採択結果}
+最後に, 実務で用いられる手順の挙動を確認するため, SLSC+ジャックナイフ法と AIC による採択結果を比較する.
+\figref{fig:slsc_jk_selection_panels}には SLSC+ジャックナイフ法による採択率を, \figref{fig:aic_selection_panels}には AIC による採択率を示す.
+各図は6つのパネルからなり, 各パネルは真の分布を固定した場合の結果を表す.
+横軸は標本サイズ \(N\), 縦軸は各候補分布が採択された割合である.
+
+\IfFileExists{fig/results/slsc_jackknife_selection_panels.pdf}{%
+\begin{figure}[t]
 \centering
-\includegraphics[width=\textwidth]{fig/results/criterion_compare.pdf}
-\caption{sampler ごとの真モデル選択率の比較．SLSC+ジャックナイフ法と AIC を併記した．}
-\label{fig:criterion_compare}
-\end{figure*}
+\includegraphics[width=\columnwidth]{fig/results/slsc_jackknife_selection_panels.pdf}
+\caption{SLSC+ジャックナイフ法による候補分布の採択率．各パネルは真の分布を固定した場合の結果を表す．}
+\label{fig:slsc_jk_selection_panels}
+\end{figure}
 }{%
-\begin{figure*}[t]
+\begin{figure}[t]
 \centering
-\caption{sampler ごとの真モデル選択率の比較．}
-\label{fig:criterion_compare}
-\end{figure*}
-}
-}{%
-\begin{figure*}[t]
-\centering
-\caption{sampler ごとの真モデル選択率の比較．}
-\label{fig:criterion_compare}
-\end{figure*}
+\caption{SLSC+ジャックナイフ法による候補分布の採択率．各パネルは真の分布を固定した場合の結果を表す．}
+\label{fig:slsc_jk_selection_panels}
+\end{figure}
 }
 
+\IfFileExists{fig/results/aic_selection_panels.pdf}{%
+\begin{figure}[t]
+\centering
+\includegraphics[width=\columnwidth]{fig/results/aic_selection_panels.pdf}
+\caption{AIC による候補分布の採択率．各パネルは真の分布を固定した場合の結果を表す．}
+\label{fig:aic_selection_panels}
+\end{figure}
+}{%
+\begin{figure}[t]
+\centering
+\caption{AIC による候補分布の採択率．各パネルは真の分布を固定した場合の結果を表す．}
+\label{fig:aic_selection_panels}
+\end{figure}
+}
 
+\figref{fig:slsc_jk_selection_panels}を見ると, SLSC+ジャックナイフ法では, Gumbel を真の分布とする場合に標本サイズの増加とともに Gumbel の採択率が上昇した.
+Exp でも真の分布の採択率は上昇したが, SqrtEt や LN3 への採択も残った.
+一方, GEV, LP3, LN3 では真の分布の採択率は低く, Gumbel への採択が卓越した.
+なお, 閾値を満たす候補分布がなく全候補分布から \(W_J\) 最小の分布を採択した割合は, \(N=25\) で16.8--26.0\%と無視できず, 小標本側の採択率はこの規則の影響を含む.
+この割合は \(N=50\) で2.7--7.4\%, \(N\ge75\) では最大2.6\%まで低下した.
 
-\subsection{X 空間と S 空間の差}
-表\ref{tab:relative_slsc} の LN3(X) 列と LN3(S) 列を比較すると, 両者の差は明瞭である. 
-LN3(X) は GEV, LP3, Exp に対して 1 を上回っており, 真の分布より常に有利というわけではない. 
-これに対し, LN3(S) は 6つの sampler すべてで 1 未満となり, 真の分布と無関係に小さな値を与えている. 
-また, 図\ref{fig:criterion_compare} においても, S 空間 SLSC は LN3 でのみ高い真モデル選択率を示し, 他の sampler では低い値にとどまった. 
-したがって, LN3 の優位性のかなりの部分は分布そのものではなく, 対数標準化された S 空間の定義に起因すると考えるのが自然である.
+\figref{fig:aic_selection_panels}では, Gumbel, SqrtEt, Exp を真の分布とする場合に, 標本サイズの増加とともに真の分布の採択率が高くなった.
+これに対し, GEV, LP3, LN3 では AIC でも真の分布の採択率は低く, SqrtEt への採択が多くなった.
+ただし, 非線形標準化された LN3 の SLSC が小さくなりやすいことに対応する, LN3 への一方向的な採択集中はみられなかった.

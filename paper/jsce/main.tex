@@ -26,14 +26,21 @@
 \usepackage{jjsce-macros}
 
 \aboveEtitlesep20mm
+\setlength{\textfloatsep}{1.0\Cvs plus 2pt minus 2pt}
+\setlength{\dbltextfloatsep}{1.0\Cvs plus 2pt minus 2pt}
 
 \newcommand{\SLSC}{\mathrm{SLSC}}
 \newcommand{\AIC}{\mathrm{AIC}}
 
+% 共著者確認用の修正表示. 投稿時は revisioncolor を black にする.
+\newcommand{\revisioncolor}{black}
+% \renewcommand{\revisioncolor}{black}
+\newcommand{\rev}[1]{\textcolor{\revisioncolor}{#1}}
+
 % 共著者確認用の付録を出力する場合は true, 投稿時に外す場合は false にする.
 \newif\ifshowappendix
-\showappendixtrue
-% \showappendixfalse
+% \showappendixtrue
+\showappendixfalse
 \AtEndDocument{%
   \ifshowappendix
     \clearpage
@@ -45,16 +52,29 @@
 
 \begin{document}
 
-\jtitle{SLSC に基づく水文頻度解析の適合度評価に関する統計的再検討}
+\jtitle{SLSC に基づく水文頻度解析の\\適合度評価に関する統計的再検討}
 \etitle{A STATISTICAL REASSESSMENT OF GOODNESS-OF-FIT EVALUATION IN HYDROLOGICAL FREQUENCY ANALYSIS BASED ON SLSC}
 
 \authorlist{%
  \authorentry{小柴 孝太}{Takahiro KOSHIBA}{TK}
-}
-\Caffiliate[TK]{正会員　京都大学助教　防災研究所（\jipcode{612--8235}京都府京都市伏見区横大路下三栖東ノ口）}{koshiba.takahiro.4s@kyoto-u.ac.jp}
-
-\received{2026}{4}{5}
-\accepted{2026}{4}{5}
+ \authorentry{田中 智大}{Tomohiro TANAKA}{TT}
+ \authorentry{平賀 優介}{Yusuke HIRAGA}{YH}
+ \authorentry{清水 啓太}{Keita SHIMIZU}{KS}
+ \authorentry{丸谷 靖幸}{Yasuyuki MARUYA}{YM}
+ \authorentry{風間 聡}{So KAZAMA}{SK}
+ \authorentry{北野 利一}{Toshikazu KITANO}{TK2}
+	}
+\Jbreakauthorline{4}
+\breakauthorline{4}
+\Caffiliate[TK]{正会員　博（工）京都大学防災研究所 助教（\jipcode{612--8235}京都府京都市伏見区横大路下三栖東ノ口）}{koshiba.takahiro.4s@kyoto-u.ac.jp}
+\Caffiliate[TT]{正会員　博（工）京都大学防災研究所 准教授（\jipcode{611--0011}京都府宇治市五ケ庄）}{}
+\Caffiliate[YH]{正会員　Ph.D. 東北大学大学院工学研究科 助教（\jipcode{980--8579}宮城県仙台市青葉区荒巻字青葉6-6-06）}{}
+\Caffiliate[KS]{正会員　博（工）北海道大学大学院工学研究院 特任助教（\jipcode{060--8628}北海道札幌市北区北十三条西8）}{}
+\Caffiliate[YM]{正会員　博（工）九州大学大学院工学研究院 准教授（\jipcode{819--0395}福岡県福岡市西区元岡744）}{}
+\Caffiliate[SK]{正会員　博（工）東北大学大学院工学研究科 教授（\jipcode{980--8579}宮城県仙台市青葉区荒巻字青葉6-6-06）}{}
+\Caffiliate[TK2]{正会員 博（工）名古屋工業大学大学院工学研究科 教授（\jipcode{466--8555}愛知県名古屋市昭和区御器所町）}{}
+% \received{2026}{4}{5}
+% \accepted{2026}{4}{5}
 
 \begin{abstract}
 \input{sections/abstract_ja}
@@ -85,43 +105,51 @@ hydrological frequency analysis, SLSC, AIC, goodness-of-fit, Monte Carlo simulat
 \section{結論}
 \input{sections/conclusion}
 
-\begin{thebibliography}{99}
-\bibitem{Takasao1986}
-高棹琢馬，宝馨：SLSC による確率分布モデルの評価基準，土木学会論文集，393/II-9，151--160，1986.
+\Acknowledgment % 謝辞：
+\rev{本研究は, 土木学会水工学委員会 水理・水文統計解析研究小委員会における活動および議論の一環として実施された.
+同小委員会の関係各位に深く謝意を表する.}
 
-\bibitem{Takara1994}
-Takara, K. and Stedinger, J. R.: Recent Japanese contributions to frequency analysis and quantile lower bound estimators, Stochastic and Statistical Methods in Hydrology and Environmental Engineering, Vol. 1, pp. 217--234, 1994.
+\begin{thebibliography}{99}
+\bibitem{Takara1998}
+宝 馨：現代水文統計論 --- 水文頻度解析のモデル，手法とその評価 ---，水工学シリーズ98-A-8，pp.1--20，1998.
+[K. Takara: Introduction of contemporary hydrological statistics --- Models and methods in frequency analysis and their evaluation ---, \textit{Hydraulic Engineering Series 98-A-8}, pp. 1--20, 1998.]
+
+\bibitem{TakaraTakasao1988}
+宝 馨，高棹琢馬：水文頻度解析における確率分布モデルの評価規準，土木学会論文集，1988(393)，pp.151--160，1988.
+[K. Takara and T. Takasao: Criteria for evaluating probability distribution models in hydrologic frequency analysis, \textit{Doboku Gakkai Ronbunshu}, 1988(393), pp. 151--160, 1988.]
 
 \bibitem{Filliben1975}
-Filliben, J. J.: The probability plot correlation coefficient test for normality, Technometrics, Vol. 17, No. 1, pp. 111--117, 1975.
+Filliben, J. J.: The probability plot correlation coefficient test for normality, \textit{Technometrics}, 17(1), pp. 111--117, 1975.
+
+\bibitem{Kinnison1989}
+Kinnison, R.: Correlation coefficient goodness-of-fit test for the extreme-value distribution, \textit{The American Statistician}, 43(2), pp. 98--100, 1989.
+
+\bibitem{JICE2003}
+一般財団法人国土技術研究センター：水文統計ユーティリティー Ver. 1.5，2003.
+[Japan Institute of Country-ology and Engineering: Hydrological Statistics Utility Ver. 1.5, 2003.]
+
+\bibitem{Kuzuha2010}
+葛葉泰久：治水計画策定における統計的手法 --- SLSC及び費用便益分析に関する考察 ---，土木学会論文集B，66(1)，pp.66--75，2010.
+[Y. Kuzuha: Considerations of statistical method in flood-control planning: SLSC and cost benefit analysis, \textit{Doboku Gakkai Ronbunshuu B}, 66(1), pp. 66--75, 2010.]
+
+\bibitem{Fujibe2011}
+藤部文昭：極値分布関数の適合度評価に関する検討，天気，58，pp.765--775，2011.
+[F. Fujibe: Discussion of fitness analysis for selecting distribution functions in extreme value analysis, \textit{Tenki}, 58, pp. 765--775, 2011.]
+
+\bibitem{HayashiEtAl2012}
+林敬大，椎葉充晴，立川康人，萬 和明，Kim Sunmin：SLSCによる水文頻度解析モデル適合度評価への統計的仮説検定の導入，土木学会論文集B1（水工学），68(4)，pp.I\_1381--I\_1386，2012.
+[H. Hayashi, M. Shiiba, Y. Tachikawa, K. Yorozu and S. Kim: Introducing a statistical hypothesis testing into SLSC goodness-of-fit evaluation for hydrological frequency analysis models, \textit{Journal of Japan Society of Civil Engineers, Ser. B1 (Hydraulic Engineering)}, 68(4), pp. I\_1381--I\_1386, 2012.]
+
+\bibitem{KuzuhaMizuki2021}
+葛葉泰久，水木千春：確率水文量算定手法の改良と従来からの手法の問題点指摘 --- 修正SLSC法を含む手法 ---，水文・水資源学会誌，34(5)，pp.283--302，2021.
+[Y. Kuzuha and C. Mizuki: Estimating T-year Hydrological Event and Issues of Conventional Methods --- Improved Standard Least Squares Criterion (SLSC) Method for Goodness-of-fit Evaluation ---, \textit{JOURNAL OF JAPAN SOCIETY OF HYDROLOGY AND WATER RESOURCES}, 34(5), pp. 283--302, 2021.]
+
+\bibitem{KuzuhaMizuki2022}
+葛葉泰久，水木千春：SLSC法に関わるいくつかの論点と母数推定・適合度評価のガイドライン，土木学会論文集B1（水工学），78(2)，pp. I\_487--I\_492，2022.
+[Y. Kuzuha and C. Mizuki: Some issues related to SLSC method and guideline for parameter estimation and goodness-of-fit test, \textit{Journal of Japan Society of Civil Engineers, Ser. B1 (Hydraulic Engineering)}, 78(2), pp. I\_487--I\_492, 2022.]
 
 \bibitem{DHI2022}
 DHI: EVA -- Technical Reference and Documentation, MIKE 2022, 2022.
-
-\bibitem{KuzuhaMizuki2022}
-葛葉泰久，水木千春：SLSC法に関わるいくつかの論点と母数推定・適合度評価のガイドライン，土木学会論文集B1（水工学），Vol. 78，No. 2，pp. I\_487--I\_492，2022.
-
-\bibitem{TakaraTakasao1988}
-宝 馨，高棹琢馬：水文頻度解析における確率分布モデルの評価規準，土木学会論文集，No.393/II-9，pp.151--160，1988.
-
-\bibitem{Takara1998}
-宝 馨：現代水文統計論 --- 水文頻度解析のモデル，手法とその評価 ---，1998年度（第34回）水工学に関する夏期研修会講義集，Aコース，土木学会水理委員会・海岸工学委員会，pp.A-8-1--A-8-20，1998.
-
-\bibitem{Filliben1975}
-Filliben, J. J.: The probability plot correlation coefficient test for normality, Technometrics, Vol.17, No.1, pp.111--117, 1975.
-
-\bibitem{Kuzuha2010}
-葛葉泰久：治水計画策定における統計的手法 --- SLSC及び費用便益分析に関する考察 ---，土木学会論文集B，Vol.66，No.1，pp.66--75，2010.
-
-\bibitem{Fujibe2011}
-藤部文昭：極値分布関数の適合度評価に関する検討，天気，Vol.58，pp.765--775，2011.
-
-\bibitem{HayashiEtAl2012}
-林敬大，立川康人，椎葉充晴，萬 和明，Kim Sunmin：SLSCによる水文頻度解析モデル適合度評価への統計的仮説検定の導入，土木学会論文集B1（水工学），Vol.68，No.4，pp.I\_1381--I\_1386，2012.
-
-\bibitem{KuzuhaMizuki2021}
-葛葉泰久，水木千春：確率水文量算定手法の改良と従来からの手法の問題点指摘 --- 修正SLSC法を含む手法 ---，水文・水資源学会誌，Vol.34，No.5，pp.283--302，2021.
-
 
 \end{thebibliography}
 

@@ -40,32 +40,27 @@ if all(isnan(share), "all")
 end
 
 % ----- Edit here -------------------------------------------------------
-figurePosition = [80 80 760 980];
+figurePosition = [80 80 560 820];
 tileRows = 3;
 tileCols = 2;
 tileSpacing = "compact";
 tilePadding = "compact";
 
-lineWidth = 1.2;
-markerSize = 0.1;
+lineWidth = 1.5;
+markerSize = 5;
 yLimits = [0, 1];
 yTicks = [0, 0.5, 1.0];
 axisFontSize = 8;
 titleFontSize = 8;
+labelFontSize = 9;
 legendFontSize = 8;
 legendNumColumns = 3;
 
 xTickIdx = unique([1, round((numel(Nlist)+1)/2), numel(Nlist)]);
 xTicks = Nlist(xTickIdx);
 
-seriesColors = [ ...
-    0.12 0.12 0.12; ...   % Gumbel
-    0.10 0.33 0.75; ...   % GEV
-    0.75 0.34 0.14; ...   % P3/LP3
-    0.10 0.55 0.32; ...   % SqrtEt
-    0.58 0.18 0.57; ...   % EXP
-    0.78 0.16 0.22];      % LN3
-seriesLineStyles = ["-", "--", ":", "-.", "-", "--"];
+seriesColors = lines(numel(models));
+seriesLineStyles = repmat("-", 1, numel(models));
 criterionCaption = localCriterionCaption(criterion);
 % ----------------------------------------------------------------------
 
@@ -86,8 +81,9 @@ for gi = 1:numel(models)
             "Color", seriesColors(fi, :), ...
             "LineStyle", seriesLineStyles(fi), ...
             "LineWidth", lineWidth, ...
-            "Marker", "none", ...
-            "MarkerSize", markerSize);
+            "Marker", "o", ...
+            "MarkerSize", markerSize, ...
+            "MarkerFaceColor", seriesColors(fi, :));
         if gi == 1
             handles(fi) = h;
         end
@@ -116,15 +112,15 @@ for gi = 1:numel(models)
     end
 end
 
-xlabel(t, "N", "FontSize", axisFontSize + 1);
-ylabel(t, "採択率", "FontSize", axisFontSize + 1);
+xlabel(t, "N", "FontSize", labelFontSize);
+ylabel(t, "採択率", "FontSize", labelFontSize);
 lgd = legend(handles, labels, ...
     "Orientation", "horizontal", ...
     "NumColumns", legendNumColumns, ...
     "FontSize", legendFontSize, ...
     "Box", "off");
 lgd.Layout.Tile = "south";
-title(t, criterionCaption, "FontSize", axisFontSize + 1, "FontWeight", "normal");
+title(t, criterionCaption, "FontSize", labelFontSize, "FontWeight", "normal");
 
 exportgraphics(fig, outPath, "ContentType", "vector");
 close(fig);

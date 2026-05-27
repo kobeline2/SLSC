@@ -281,7 +281,7 @@ if dropLeadingZero
     out = regexprep(out, '^-0(?=\.)', '-');
 end
 if isBold
-    out = "\\textbf{" + out + "}";
+    out = string(char(92)) + "textbf{" + out + "}";
 end
 end
 
@@ -300,7 +300,7 @@ fprintf(fid, "\\scriptsize\n");
 fprintf(fid, "\\setlength{\\tabcolsep}{3pt}\n");
 fprintf(fid, "\\begin{tabular}{l%s}\n", repmat('r', 1, nCols));
 fprintf(fid, "\\hline\n");
-fprintf(fid, "sampler");
+fprintf(fid, "真の分布");
 for j = 1:nCols
     fprintf(fid, " & %s", char(tbl.colLabels(j)));
 end
@@ -318,18 +318,17 @@ end
 fprintf(fid, "\\hline\n");
 fprintf(fid, "\\end{tabular}\n");
 fprintf(fid, "\\par\\footnotesize\n");
-fprintf(fid, "値は対象とした標本サイズにわたる平均 SLSC 値である．");
 if includeLn3X
-    fprintf(fid, "LN3(X) は X 空間, LN3(S) は S 空間で評価した値を示す．");
+    fprintf(fid, "LN3(X) は \\(X\\) 空間, LN3(S) は \\(S\\) 空間で評価した値である. ");
 else
-    fprintf(fid, "LN3 列は S 空間で評価した値を示す．");
+    fprintf(fid, "LN3 列は \\(S\\) 空間で評価した値である. ");
 end
-fprintf(fid, "太字は同一 sampler 行において self-fit 値より小さいものを示す．\n");
+fprintf(fid, "太字は同一行で真の分布を当てはめた場合より小さい値を示す.\n");
 fprintf(fid, "\\end{table}\n");
 end
 
 function localPrintPreview(tbl)
-header = "sampler";
+header = "gen";
 for j = 1:numel(tbl.colLabels)
     header = header + sprintf("\t%s", tbl.colLabels(j));
 end
