@@ -103,7 +103,7 @@ ylim(zLim);
 set(gca, 'YTick', zTicks, 'YTickLabel', compose('%.2f', cumTicks));
 set(gca, 'XTick', -2:1:2);
 
-xlabel('Standardised variate, s');
+xlabel('Standardized variate, s');
 ylabel('Cumulative probability');
 % title('(a) Probability-paper coordinates', 'FontWeight','normal');
 

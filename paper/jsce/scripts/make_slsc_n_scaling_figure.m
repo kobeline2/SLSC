@@ -18,7 +18,7 @@ summary = S.summary;
 plotData = localPrepareSlscData(summary, summaryPath);
 
 % ----- Edit here -------------------------------------------------------
-figurePosition = [80 80 560 820];
+figurePosition = [80 80 560 700];
 tileRows = 3;
 tileCols = 2;
 tileSpacing = "compact";
@@ -30,10 +30,17 @@ lineSpec = "-o";
 lineWidth = 1.5;
 markerSize = 5;
 errorBarWidth = 1.0;
-axisFontSize = 8;
-titleFontSize = 8;
-labelFontSize = 9;
-legendFontSize = 8;
+axisFontSize = 16;
+titleFontSize = 16;
+labelFontSize = 17;
+legendFontSize = 16;
+legendNumColumns = 4;
+figureFontName = "Times New Roman";   % 本文と書体を揃える
+panelLabelPos = [0.04, 0.05];        % パネル名の軸内位置（正規化座標）
+panelLabelVAlign = "bottom";         % 図2は上側が埋まるため左下に置く
+
+% 全パネル共通の縦軸下限. NaN にするとデータから自動決定する.
+yLimLower = 0.01;
 
 showReferenceLine = true;
 referenceLabel = "N^{-1/2}";
@@ -45,6 +52,24 @@ xLabelText = "N";
 yLabelText = plotData.defaultYLabel;
 legendOrientation = "horizontal";
 % ----------------------------------------------------------------------
+
+% ----- 査読対応: 全パネル共通の縦軸範囲と目盛 -----
+% パネルごとに縦軸を自動設定すると, 10 のべき乗表示のパネルと小数表示のパネルが
+% 混在し, 対数軸と線形軸が混じっているように見える. これを避けるため,
+% 縦軸の範囲と目盛位置を全パネルで共通化する.
+loAll = max(plotData.mean - plotData.std, plotData.mean * 0.2);
+hiAll = plotData.mean + plotData.std;
+loAll = loAll(isfinite(loAll) & loAll > 0);
+hiAll = hiAll(isfinite(hiAll) & hiAll > 0);
+if isnan(yLimLower)
+    yLo = min(loAll(:)) * 0.9;
+else
+    yLo = yLimLower;
+end
+commonYLim = [yLo, max(hiAll(:)) * 1.1];
+candidateTicks = [0.01 0.02 0.05 0.1 0.2];
+commonYTicks = candidateTicks(candidateTicks >= commonYLim(1) & ...
+    candidateTicks <= commonYLim(2));
 
 fig = figure("Visible", "off", "Position", figurePosition);
 tl = tiledlayout(tileRows, tileCols, ...
@@ -95,25 +120,52 @@ for gi = 1:numel(plotData.models)
         end
     end
 
-    title(plotData.labels(gi), "FontSize", titleFontSize, "FontWeight", "normal");
-    xlabel(xLabelText, "FontSize", labelFontSize);
-    ylabel(yLabelText, "FontSize", labelFontSize);
-    set(gca, "XScale", "log", "YScale", "log");
-    xticks(plotData.Nlist);
-    xticklabels(string(plotData.Nlist));
+    ax = gca;
+    text(ax, panelLabelPos(1), panelLabelPos(2), plotData.labels(gi), ...
+        "Units", "normalized", ...
+        "FontSize", titleFontSize, ...
+        "HorizontalAlignment", "left", ...
+        "VerticalAlignment", panelLabelVAlign, ...
+        "BackgroundColor", "w", ...
+        "Margin", 1);
+    set(ax, "XScale", "log", "YScale", "log");
+    xlim(ax, [min(plotData.Nlist), max(plotData.Nlist)]);
+    ylim(ax, commonYLim);
+    if ~isempty(commonYTicks)
+        yticks(ax, commonYTicks);
+        yticklabels(ax, compose("%g", commonYTicks));
+    end
+    xTickIdx = unique([1, round((numel(plotData.Nlist)+1)/2), numel(plotData.Nlist)]);
+    xticks(ax, plotData.Nlist(xTickIdx));
+    xticklabels(ax, string(plotData.Nlist(xTickIdx)));
     grid on;
     box on;
-    ax = gca;
     ax.FontSize = axisFontSize;
+
+    % 目盛ラベルは外周パネルのみに表示し, 重なりを避ける
+    row = ceil(gi / tileCols);
+    col = gi - (row - 1) * tileCols;
+    if row < tileRows
+        ax.XTickLabel = [];
+    end
+    if col > 1
+        ax.YTickLabel = [];
+    end
 end
+
+xlabel(tl, xLabelText, "FontSize", labelFontSize);
+ylabel(tl, yLabelText, "FontSize", labelFontSize);
 
 validHandles = handles(isgraphics(handles));
 validLabels = legendLabels(1:numel(validHandles));
 lgd = legend(validHandles, validLabels, ...
     "Orientation", legendOrientation, ...
-    "FontSize", legendFontSize);
+    "NumColumns", legendNumColumns, ...
+    "FontSize", legendFontSize, ...
+    "Box", "off");
 lgd.Layout.Tile = "south";
 
+set(findall(fig, "-property", "FontName"), "FontName", figureFontName);
 exportgraphics(fig, outPath, "ContentType", "vector");
 close(fig);
 fprintf("Wrote %s\n", outPath);

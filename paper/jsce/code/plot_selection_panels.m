@@ -50,11 +50,14 @@ lineWidth = 1.5;
 markerSize = 5;
 yLimits = [0, 1];
 yTicks = [0, 0.5, 1.0];
-axisFontSize = 8;
-titleFontSize = 8;
-labelFontSize = 9;
-legendFontSize = 8;
+axisFontSize = 16;
+titleFontSize = 16;
+labelFontSize = 17;
+legendFontSize = 16;
 legendNumColumns = 3;
+figureFontName = "Times New Roman";   % 本文と書体を揃える
+panelLabelPos = [0.04, 0.94];        % パネル名の軸内位置（正規化座標）
+panelLabelVAlign = "top";
 
 xTickIdx = unique([1, round((numel(Nlist)+1)/2), numel(Nlist)]);
 xTicks = Nlist(xTickIdx);
@@ -89,7 +92,13 @@ for gi = 1:numel(models)
         end
     end
 
-    title(ax, labels(gi), "FontSize", titleFontSize, "FontWeight", "normal");
+    text(ax, panelLabelPos(1), panelLabelPos(2), labels(gi), ...
+        "Units", "normalized", ...
+        "FontSize", titleFontSize, ...
+        "HorizontalAlignment", "left", ...
+        "VerticalAlignment", panelLabelVAlign, ...
+        "BackgroundColor", "w", ...
+        "Margin", 1);
     xlim(ax, [min(Nlist), max(Nlist)]);
     ylim(ax, yLimits);
     xticks(ax, xTicks);
@@ -120,8 +129,8 @@ lgd = legend(handles, labels, ...
     "FontSize", legendFontSize, ...
     "Box", "off");
 lgd.Layout.Tile = "south";
-title(t, criterionCaption, "FontSize", labelFontSize, "FontWeight", "normal");
 
+set(findall(fig, "-property", "FontName"), "FontName", figureFontName);
 exportgraphics(fig, outPath, "ContentType", "vector");
 close(fig);
 fprintf("Wrote %s\n", outPath);
@@ -181,7 +190,7 @@ for i = 1:numel(models)
         case "sqrtet"
             labels(i) = "SqrtEt";
         case "exponential"
-            labels(i) = "EXP";
+            labels(i) = "Exp";
         case "lnormal"
             labels(i) = "LN3";
         otherwise

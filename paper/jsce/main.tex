@@ -1,8 +1,8 @@
 % !TeX program = lualatex
 % Draft workspace for the JSCE paper associated with the SLSC project.
 % Open this file in VS Code and build with latexmk + lualatex.
-\documentclass{jjsce}
-% \documentclass[jscefinal]{jjsce}
+% \documentclass{jjsce}
+\documentclass[jscefinal]{jjsce}
 
 \usepackage{amsmath}
 \usepackage{amsthm}
@@ -36,6 +36,16 @@
 \newcommand{\revisioncolor}{black}
 % \renewcommand{\revisioncolor}{black}
 \newcommand{\rev}[1]{\textcolor{\revisioncolor}{#1}}
+
+% ===== 査読対応（2026年8月, 第2稿）の修正表示 =====
+% 共著者確認中は red, 修正原稿を提出するときは下の red を black に変えるだけでよい.
+% \revB{...} で囲んだ箇所がすべてその色になる.
+\newcommand{\revisioncolorB}{black}
+\newcommand{\revB}[1]{\textcolor{\revisioncolorB}{#1}}
+
+% S 空間 / X 空間の S, X を数式斜体に統一するためのマクロ（見出し内でも安全）.
+\newcommand{\Xsp}{\ensuremath{X}}
+\newcommand{\Ssp}{\ensuremath{S}}
 
 % 共著者確認用の付録を出力する場合は true, 投稿時に外す場合は false にする.
 \newif\ifshowappendix
@@ -73,8 +83,8 @@
 \Caffiliate[YM]{正会員　博（工）九州大学大学院工学研究院 准教授（\jipcode{819--0395}福岡県福岡市西区元岡744）}{}
 \Caffiliate[SK]{正会員　博（工）東北大学大学院工学研究科 教授（\jipcode{980--8579}宮城県仙台市青葉区荒巻字青葉6-6-06）}{}
 \Caffiliate[TK2]{正会員 博（工）名古屋工業大学大学院工学研究科 教授（\jipcode{466--8555}愛知県名古屋市昭和区御器所町）}{}
-% \received{2026}{4}{5}
-% \accepted{2026}{4}{5}
+\received{2026}{5}{27}
+\accepted{2026}{9}{16}
 
 \begin{abstract}
 \input{sections/abstract_ja}
@@ -104,7 +114,7 @@ hydrological frequency analysis, SLSC, AIC, goodness-of-fit, Monte Carlo simulat
 
 \section{結論}
 \input{sections/conclusion}
-
+\\
 \Acknowledgment % 謝辞：
 \rev{本研究は, 土木学会水工学委員会 水理・水文統計解析研究小委員会における活動および議論の一環として実施された.
 同小委員会の関係各位に深く謝意を表する.}
@@ -123,10 +133,6 @@ Filliben, J. J.: The probability plot correlation coefficient test for normality
 
 \bibitem{Kinnison1989}
 Kinnison, R.: Correlation coefficient goodness-of-fit test for the extreme-value distribution, \textit{The American Statistician}, 43(2), pp. 98--100, 1989.
-
-\bibitem{JICE2003}
-一般財団法人国土技術研究センター：水文統計ユーティリティー Ver. 1.5，2003.
-[Japan Institute of Country-ology and Engineering: Hydrological Statistics Utility Ver. 1.5, 2003.]
 
 \bibitem{Kuzuha2010}
 葛葉泰久：治水計画策定における統計的手法 --- SLSC及び費用便益分析に関する考察 ---，土木学会論文集B，66(1)，pp.66--75，2010.
@@ -147,6 +153,10 @@ Kinnison, R.: Correlation coefficient goodness-of-fit test for the extreme-value
 \bibitem{KuzuhaMizuki2022}
 葛葉泰久，水木千春：SLSC法に関わるいくつかの論点と母数推定・適合度評価のガイドライン，土木学会論文集B1（水工学），78(2)，pp. I\_487--I\_492，2022.
 [Y. Kuzuha and C. Mizuki: Some issues related to SLSC method and guideline for parameter estimation and goodness-of-fit test, \textit{Journal of Japan Society of Civil Engineers, Ser. B1 (Hydraulic Engineering)}, 78(2), pp. I\_487--I\_492, 2022.]
+
+\bibitem{JICE2003}
+一般財団法人国土技術研究センター：水文統計ユーティリティー Ver. 1.5，2003.
+[Japan Institute of Country-ology and Engineering: Hydrological Statistics Utility Ver. 1.5, 2003.]
 
 \bibitem{DHI2022}
 DHI: EVA -- Technical Reference and Documentation, MIKE 2022, 2022.
